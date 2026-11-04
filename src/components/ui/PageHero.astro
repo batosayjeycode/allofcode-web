@@ -1,0 +1,52 @@
+---
+/** Top of an inner page: breadcrumbs, eyebrow, H1 and intro. */
+import Breadcrumbs from '../layout/Breadcrumbs.astro';
+import type { Crumb } from '../../lib/seo';
+
+interface Props {
+  eyebrow: string;
+  title: string;
+  crumbs?: Crumb[];
+}
+const { eyebrow, title, crumbs } = Astro.props;
+---
+
+<section class="page-hero" aria-labelledby="page-title">
+  <div class="container page-hero__inner">
+    {crumbs && <Breadcrumbs crumbs={crumbs} />}
+    <p class="eyebrow">{eyebrow}</p>
+    <h1 id="page-title">{title}</h1>
+    {Astro.slots.has('default') && (
+      <div class="lead">
+        <slot />
+      </div>
+    )}
+  </div>
+</section>
+
+<style>
+  .page-hero {
+    position: relative;
+    padding-block: var(--space-8) var(--space-7);
+    border-bottom: 1px solid var(--color-border);
+    background:
+      linear-gradient(to bottom, transparent, var(--color-bg)),
+      linear-gradient(var(--color-grid) 1px, transparent 1px) 0 0 / 48px 48px,
+      linear-gradient(90deg, var(--color-grid) 1px, transparent 1px) 0 0 / 48px 48px;
+  }
+
+  .page-hero__inner {
+    display: grid;
+    gap: var(--space-4);
+    justify-items: start;
+  }
+
+  .page-hero h1 {
+    max-width: 22ch;
+    font-size: var(--text-2xl);
+  }
+
+  .page-hero .lead :global(p + p) {
+    margin-top: var(--space-3);
+  }
+</style>

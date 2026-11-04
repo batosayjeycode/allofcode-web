@@ -1,0 +1,114 @@
+---
+import type { Tool } from '../../data/tools';
+
+interface Props {
+  tool: Tool;
+  /** Heading level inside the surrounding section. */
+  headingLevel?: 'h2' | 'h3';
+}
+const { tool, headingLevel: Heading = 'h3' } = Astro.props;
+---
+
+<article class="tool-card">
+  <header class="tool-card__head">
+    <span class="chip chip--live">Live</span>
+    <span class="tool-card__category">{tool.category}</span>
+  </header>
+
+  <Heading class="tool-card__title">
+    <a href={tool.pagePath} class="tool-card__link">
+      {tool.name}
+    </a>
+  </Heading>
+  <p class="tool-card__summary">{tool.summary}</p>
+
+  <ul class="chip-list" aria-label={`${tool.name} topics`}>
+    {tool.tags.map((tag) => (
+      <li class="chip">{tag}</li>
+    ))}
+  </ul>
+
+  <footer class="tool-card__actions">
+    <a href={tool.appUrl} class="btn btn--primary">
+      Open {tool.name}
+      <svg viewBox="0 0 16 16" aria-hidden="true">
+        <path
+          d="M6 3h7v7M13 3 4 12"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.6"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        ></path>
+      </svg>
+    </a>
+    <a href={tool.pagePath} class="btn">
+      How it works
+    </a>
+  </footer>
+</article>
+
+<style>
+  .tool-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    padding: var(--space-5);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    background: linear-gradient(180deg, var(--color-surface-raised), var(--color-surface) 60%);
+    box-shadow: var(--shadow-card);
+    transition:
+      border-color var(--dur) var(--ease),
+      transform var(--dur) var(--ease);
+  }
+
+  .tool-card:hover {
+    border-color: var(--color-accent-line);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .tool-card:hover {
+      transform: translateY(-2px);
+    }
+  }
+
+  .tool-card__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2);
+  }
+
+  .tool-card__category {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-text-subtle);
+  }
+
+  .tool-card__title {
+    font-size: var(--text-lg);
+  }
+
+  .tool-card__link {
+    text-decoration: none;
+  }
+
+  .tool-card__link:hover {
+    color: var(--color-accent);
+  }
+
+  .tool-card__summary {
+    color: var(--color-text-muted);
+  }
+
+  .tool-card__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    margin-top: auto;
+    padding-top: var(--space-2);
+  }
+</style>

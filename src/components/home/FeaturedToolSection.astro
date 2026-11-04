@@ -1,0 +1,96 @@
+---
+import SqlCompareShot from '../tools/SqlCompareShot.astro';
+import { getTool } from '../../data/tools';
+
+const tool = getTool('sql-compare');
+---
+
+<section class="section featured" aria-labelledby="featured-title">
+  <div class="container featured__grid">
+    <div class="featured__copy">
+      <p class="eyebrow">Featured tool</p>
+      <h2 id="featured-title" class="featured__title">
+        {tool.name}
+      </h2>
+      <p class="featured__problem">
+        Two versions of a query look different. Is it just formatting, or did the meaning change?
+        SQL Compare puts both side by side and labels every difference, so you review the changes
+        that matter first.
+      </p>
+
+      <ul class="featured__list">
+        {tool.highlights.map((h) => (
+          <li>{h}</li>
+        ))}
+      </ul>
+
+      <div class="btn-row">
+        <a href={tool.appUrl} class="btn btn--primary">
+          Open SQL Compare
+        </a>
+        <a href={tool.pagePath} class="btn">
+          Learn how it works
+        </a>
+      </div>
+    </div>
+
+    <div class="featured__media">
+      <SqlCompareShot caption="The built-in example in SQL Compare, PostgreSQL dialect." />
+    </div>
+  </div>
+</section>
+
+<style>
+  .featured__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-7);
+    align-items: center;
+  }
+
+  @media (min-width: 60rem) {
+    .featured__grid {
+      grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+    }
+  }
+
+  .featured__copy {
+    display: grid;
+    gap: var(--space-5);
+    justify-items: start;
+  }
+
+  .featured__title {
+    font-size: var(--text-2xl);
+  }
+
+  .featured__problem {
+    font-size: var(--text-md);
+    color: var(--color-text-muted);
+  }
+
+  .featured__list {
+    display: grid;
+    gap: var(--space-3);
+    padding: 0;
+    list-style: none;
+  }
+
+  .featured__list li {
+    position: relative;
+    padding-left: 1.75rem;
+  }
+
+  .featured__list li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.45em;
+    width: 1rem;
+    height: 0.6rem;
+    border-left: 2px solid var(--color-accent);
+    border-bottom: 2px solid var(--color-accent);
+    transform: rotate(-45deg) scale(0.8);
+    transform-origin: center;
+  }
+</style>

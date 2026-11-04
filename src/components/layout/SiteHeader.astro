@@ -1,0 +1,257 @@
+---
+import Logo from '../ui/Logo.astro';
+import { primaryNav } from '../../data/site';
+
+interface Props {
+  currentPath: string;
+}
+const { currentPath } = Astro.props;
+
+function isCurrent(href: string): boolean {
+  if (href.includes('#')) return false;
+  return href === '/' ? currentPath === '/' : currentPath.startsWith(href);
+}
+---
+
+<header class="site-header" data-site-header>
+  <div class="container site-header__inner">
+    <a href="/" class="site-header__brand" aria-label="AllOfCode home">
+      <Logo />
+    </a>
+
+    <button
+      type="button"
+      class="nav-toggle"
+      aria-expanded="false"
+      aria-controls="site-nav"
+      data-nav-toggle
+    >
+      <span class="visually-hidden">Menu</span>
+      <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
+        <path class="nav-toggle__top" d="M4 7h16"></path>
+        <path class="nav-toggle__mid" d="M4 12h16"></path>
+        <path class="nav-toggle__bot" d="M4 17h16"></path>
+      </svg>
+    </button>
+
+    <nav id="site-nav" class="site-nav" aria-label="Primary">
+      <ul class="site-nav__list">
+        {primaryNav.map((item) => (
+          <li>
+            <a
+              href={item.href}
+              class="site-nav__link"
+              aria-current={isCurrent(item.href) ? 'page' : undefined}
+            >
+              {item.label}
+            </a>
+          </li>
+        ))}
+      </ul>
+      <a href="/tools/" class="btn btn--primary site-nav__cta">
+        Explore Tools
+      </a>
+    </nav>
+  </div>
+</header>
+
+<!--
+  The mobile menu is collapsed by default in CSS (no layout shift when the script
+  loads). Without JavaScript, this fallback shows the links in a row instead.
+-->
+<noscript>
+  <style is:inline>
+    @media (max-width: 51.99rem) {
+      [data-nav-toggle] {
+        display: none !important;
+      }
+      #site-nav {
+        display: flex !important;
+        flex-direction: row !important;
+        padding-block: 0 0.5rem !important;
+      }
+      #site-nav ul {
+        flex-direction: row !important;
+      }
+      #site-nav ul a {
+        padding: 0.5rem 0.75rem 0.5rem 0 !important;
+        border-bottom: 0 !important;
+        font-size: 0.875rem !important;
+      }
+      #site-nav > a {
+        display: none !important;
+      }
+    }
+  </style>
+</noscript>
+
+<script>
+  const header = document.querySelector<HTMLElement>('[data-site-header]');
+  const toggle = header?.querySelector<HTMLButtonElement>('[data-nav-toggle]');
+  const nav = header?.querySelector<HTMLElement>('#site-nav');
+
+  if (header && toggle && nav) {
+    const desktop = window.matchMedia('(min-width: 52rem)');
+
+    const setOpen = (open: boolean, returnFocus = false) => {
+      toggle.setAttribute('aria-expanded', String(open));
+      header.toggleAttribute('data-open', open);
+      if (!open && returnFocus) toggle.focus();
+    };
+
+    toggle.addEventListener('click', () => {
+      setOpen(toggle.getAttribute('aria-expanded') !== 'true');
+    });
+
+    nav.addEventListener('click', (event) => {
+      if ((event.target as HTMLElement).closest('a')) setOpen(false);
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && header.hasAttribute('data-open')) setOpen(false, true);
+    });
+
+    document.addEventListener('click', (event) => {
+      if (header.hasAttribute('data-open') && !header.contains(event.target as Node)) {
+        setOpen(false);
+      }
+    });
+
+    desktop.addEventListener('change', (event) => {
+      if (event.matches) setOpen(false);
+    });
+  }
+</script>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    border-bottom: 1px solid var(--color-border);
+    background: rgb(9 13 18 / 0.82);
+    backdrop-filter: saturate(140%) blur(12px);
+    -webkit-backdrop-filter: saturate(140%) blur(12px);
+  }
+
+  .site-header__inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2) var(--space-5);
+    min-height: var(--header-h);
+  }
+
+  .site-header__brand {
+    display: inline-flex;
+    padding-block: var(--space-2);
+    text-decoration: none;
+  }
+
+  .site-nav {
+    display: flex;
+    align-items: center;
+    gap: var(--space-5);
+  }
+
+  .site-nav__list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-1);
+    padding: 0;
+    list-style: none;
+  }
+
+  .site-nav__link {
+    display: inline-block;
+    padding: var(--space-2) var(--space-3);
+    border-radius: var(--radius-sm);
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
+    font-weight: 500;
+    text-decoration: none;
+    transition: color var(--dur) var(--ease);
+  }
+
+  .site-nav__link:hover,
+  .site-nav__link[aria-current='page'] {
+    color: var(--color-text);
+  }
+
+  .site-nav__link[aria-current='page'] {
+    box-shadow: inset 0 -2px 0 var(--color-accent);
+    border-radius: 0;
+  }
+
+  .nav-toggle {
+    display: none;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background: var(--color-surface);
+    color: var(--color-text);
+    cursor: pointer;
+  }
+
+  .nav-toggle path {
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    transition:
+      transform var(--dur) var(--ease),
+      opacity var(--dur) var(--ease);
+    transform-origin: center;
+  }
+
+  [data-open] .nav-toggle__top {
+    transform: translateY(5px) rotate(45deg);
+  }
+
+  [data-open] .nav-toggle__mid {
+    opacity: 0;
+  }
+
+  [data-open] .nav-toggle__bot {
+    transform: translateY(-5px) rotate(-45deg);
+  }
+
+  /* Small screens: collapsible panel (see the <noscript> fallback above). */
+  @media (max-width: 51.99rem) {
+    .nav-toggle {
+      display: grid;
+    }
+
+    .site-nav {
+      display: none;
+      flex-direction: column;
+      align-items: stretch;
+      gap: var(--space-4);
+      width: 100%;
+      padding-block: var(--space-2) var(--space-5);
+    }
+
+    [data-open] .site-nav {
+      display: flex;
+    }
+
+    .site-nav__list {
+      flex-direction: column;
+    }
+
+    .site-nav__link {
+      display: block;
+      padding: var(--space-3) 0;
+      border-bottom: 1px solid var(--color-border);
+      border-radius: 0;
+      font-size: var(--text-base);
+    }
+
+    .site-nav__link[aria-current='page'] {
+      box-shadow: none;
+      color: var(--color-accent);
+    }
+  }
+</style>

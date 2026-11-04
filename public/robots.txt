@@ -1,0 +1,5 @@
+# https://allofcode.com/robots.txt
+User-agent: *
+Allow: /
+
+Sitemap: https://allofcode.com/sitemap-index.xml

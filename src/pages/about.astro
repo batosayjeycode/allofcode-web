@@ -1,0 +1,85 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/ui/PageHero.astro';
+import { tools } from '../data/tools';
+import { breadcrumbSchema, graph, organizationSchema, type Crumb } from '../lib/seo';
+
+const path = '/about/';
+const crumbs: Crumb[] = [
+  { name: 'Home', path: '/' },
+  { name: 'About', path },
+];
+
+const seo = {
+  title: 'About AllOfCode',
+  description:
+    'AllOfCode is a developer workbench: practical tools, tested scripts and technical experiments, each published only once it is genuinely useful.',
+  path,
+  jsonLd: graph(organizationSchema(), breadcrumbSchema(crumbs)),
+};
+---
+
+<BaseLayout {...seo}>
+  <PageHero eyebrow="About" title="A workbench for everyday developer work" crumbs={crumbs}>
+    <p>
+      AllOfCode is a growing collection of practical developer tools, scripts and experiments, built
+      to make everyday coding work simpler.
+    </p>
+  </PageHero>
+
+  <section class="section">
+    <div class="container prose">
+      <h2>What AllOfCode publishes</h2>
+      <ul>
+        <li>
+          <strong>Tools</strong>: focused utilities you can open and use straight away. Each one has
+          a page that documents what it does, what it doesn't, and how it handles your data. See the{' '}
+          <a href="/tools/">tools directory</a>.
+        </li>
+        <li>
+          <strong>Scripts</strong>: small scripts for recurring chores, each published with tested
+          code, requirements, expected output and safety notes. None are published yet.
+        </li>
+        <li>
+          <strong>Labs</strong>: experiments, demos and prototypes that explore how things work.
+          Nothing is published in the Lab yet.
+        </li>
+      </ul>
+
+      <h2>Where things stand</h2>
+      <p>
+        {tools.length === 1 ? 'One tool is' : `${tools.length} tools are`} live today:
+        {tools.map((t, i) => (
+          <Fragment>
+            {i > 0 && ', '}
+            <a href={t.pagePath}>{t.name}</a>
+          </Fragment>
+        ))}
+        . It compares two SQL queries or files and tells formatting changes apart from changes that
+        may alter what the SQL does. More will be added when they are ready; there are no
+        placeholder pages and no announced dates.
+      </p>
+
+      <h2>How we build</h2>
+      <ul>
+        <li>Start from a real, repeated developer task, not from a feature list.</li>
+        <li>Keep tools simple to open and use, with no account required.</li>
+        <li>Run in the browser where possible, so your code doesn't have to leave your machine.</li>
+        <li>Document limitations as plainly as features.</li>
+        <li>Improve things as real needs come up.</li>
+      </ul>
+
+      <h2>About the “hacker” theme</h2>
+      <p>
+        The terminal look is about curiosity: taking things apart to understand them.
+        Security-related content on AllOfCode is educational and defensive, and is meant only for
+        systems you own or are authorised to test.
+      </p>
+
+      <h2>Get in touch</h2>
+      <p>
+        Found a bug or have an idea for a tool? See the <a href="/contact/">contact page</a>.
+      </p>
+    </div>
+  </section>
+</BaseLayout>

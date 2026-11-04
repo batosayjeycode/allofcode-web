@@ -1,0 +1,111 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/ui/PageHero.astro';
+import ToolCard from '../../components/tools/ToolCard.astro';
+import { tools } from '../../data/tools';
+import { breadcrumbSchema, collectionPageSchema, graph, type Crumb } from '../../lib/seo';
+
+const path = '/tools/';
+const crumbs: Crumb[] = [
+  { name: 'Home', path: '/' },
+  { name: 'Tools', path },
+];
+
+const categories = [...new Set(tools.map((t) => t.category))];
+
+const seo = {
+  title: 'Online Developer Tools',
+  description:
+    'Free online developer tools from AllOfCode. Every tool listed is live, runs in your browser and has a page that documents its features and limits.',
+  path,
+  jsonLd: graph(
+    collectionPageSchema(path, 'AllOfCode developer tools', tools),
+    breadcrumbSchema(crumbs),
+  ),
+};
+---
+
+<BaseLayout {...seo}>
+  <PageHero eyebrow="Tools directory" title="Online developer tools" crumbs={crumbs}>
+    <p>
+      Utilities for everyday development work. Everything listed here is live and free to use, with
+      no account needed.
+    </p>
+  </PageHero>
+
+  {categories.map((category) => {
+    const items = tools.filter((t) => t.category === category);
+    const id = `cat-${category.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
+    return (
+      <section class="section directory" aria-labelledby={id}>
+        <div class="container">
+          <div class="directory__head">
+            <h2 id={id} class="directory__title">
+              {category}
+            </h2>
+            <span class="mono directory__count">
+              {items.length} {items.length === 1 ? 'tool' : 'tools'}
+            </span>
+          </div>
+          <div class="directory__grid">
+            {items.map((tool) => (
+              <ToolCard tool={tool} />
+            ))}
+          </div>
+        </div>
+      </section>
+    );
+  })}
+
+  <section class="section" aria-labelledby="listing-title">
+    <div class="container listing prose">
+      <h2 id="listing-title">How tools get listed</h2>
+      <p>
+        A tool appears in this directory once it is finished and usable. Each listing links to two
+        places: the tool itself, and a page on this site that explains how it works, which inputs it
+        supports, and its known limitations.
+      </p>
+      <p>
+        More tools will be added over time. There are no placeholder listings, so if it's here, you
+        can use it today. Read more <a href="/about/">about AllOfCode</a>.
+      </p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .directory__head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-4);
+    margin-bottom: var(--space-5);
+    padding-bottom: var(--space-3);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .directory__title {
+    font-size: var(--text-lg);
+  }
+
+  .directory__count {
+    font-size: var(--text-xs);
+    color: var(--color-text-subtle);
+  }
+
+  .directory__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-5);
+  }
+
+  @media (min-width: 48rem) {
+    .directory__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  .listing h2 {
+    margin-top: 0;
+  }
+</style>

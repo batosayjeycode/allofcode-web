@@ -1,0 +1,149 @@
+---
+import SectionHeading from '../ui/SectionHeading.astro';
+import { getTool } from '../../data/tools';
+
+const sqlCompare = getTool('sql-compare');
+
+const principles = [
+  {
+    key: 'practical',
+    title: 'Built around real workflows',
+    body: 'Each tool starts from a task developers repeat, such as reviewing SQL changes before they ship.',
+  },
+  {
+    key: 'simple',
+    title: 'Open it and start',
+    body: 'No accounts and no setup. A tool should be useful within the first minute.',
+  },
+  {
+    key: 'local',
+    title: 'Your code stays with you',
+    body: 'When a tool can run in your browser, it does. SQL Compare never sends your SQL to a server.',
+  },
+  {
+    key: 'honest',
+    title: 'Limits are documented',
+    body: 'Tool pages say what is not supported as clearly as what is, so you know when to reach for something else.',
+  },
+];
+---
+
+<section class="section" aria-labelledby="why-title">
+  <div class="container why">
+    <SectionHeading
+      eyebrow="Why AllOfCode"
+      title="Small tools, held to a high bar"
+      id="why-title"
+    />
+
+    <ul class="why__grid">
+      {principles.map((p) => (
+        <li class="why__card">
+          <p class="why__key mono" aria-hidden="true">
+            {p.key}
+          </p>
+          <h3 class="why__title">{p.title}</h3>
+          <p class="why__body">{p.body}</p>
+        </li>
+      ))}
+    </ul>
+
+    <div class="why__cta">
+      <p>
+        <span class="mono why__cta-prompt" aria-hidden="true">
+          &gt;
+        </span>
+        Have two versions of a query to review?
+      </p>
+      <div class="btn-row">
+        <a href={sqlCompare.appUrl} class="btn btn--primary">
+          Open {sqlCompare.name}
+        </a>
+        <a href="/tools/" class="btn">
+          See all tools
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .why {
+    display: grid;
+    gap: var(--space-7);
+  }
+
+  .why__grid {
+    display: grid;
+    gap: var(--space-4);
+    padding: 0;
+    list-style: none;
+  }
+
+  @media (min-width: 40rem) {
+    .why__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .why__grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+
+  .why__card {
+    display: grid;
+    align-content: start;
+    gap: var(--space-3);
+    padding: var(--space-5);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    background: var(--color-surface);
+  }
+
+  .why__key {
+    font-size: var(--text-xs);
+    color: var(--color-cyan);
+  }
+
+  .why__key::before {
+    content: '--';
+  }
+
+  .why__title {
+    font-size: var(--text-md);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+
+  .why__body {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+  }
+
+  .why__cta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-5);
+    padding: var(--space-5) var(--space-6);
+    border: 1px solid var(--color-accent-line);
+    border-radius: var(--radius-lg);
+    background:
+      radial-gradient(30rem 10rem at 0% 0%, var(--color-accent-soft), transparent 70%),
+      var(--color-surface);
+  }
+
+  .why__cta p {
+    font-size: var(--text-lg);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+
+  .why__cta-prompt {
+    color: var(--color-accent);
+    margin-right: var(--space-2);
+  }
+</style>

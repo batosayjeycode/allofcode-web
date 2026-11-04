@@ -1,0 +1,45 @@
+---
+/** AllOfCode wordmark: a prompt glyph plus the name. Decorative mark is aria-hidden. */
+interface Props {
+  class?: string;
+}
+const { class: className } = Astro.props;
+---
+
+<span class:list={['logo', className]}>
+  <svg class="logo__mark" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true">
+    <rect x="1" y="1" width="30" height="30" rx="8" fill="#111820" stroke="#263440"></rect>
+    <path
+      d="M9 11.5 14 16l-5 4.5"
+      fill="none"
+      stroke="#48F29A"
+      stroke-width="2.4"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    ></path>
+    <path d="M16.5 21h6.5" stroke="#4CC9F0" stroke-width="2.4" stroke-linecap="round"></path>
+  </svg>
+  <span class="logo__text">
+    All<span class="logo__of">Of</span>Code
+  </span>
+</span>
+
+<style>
+  .logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-weight: 700;
+    font-size: 1.125rem;
+    letter-spacing: -0.02em;
+    color: var(--color-text);
+  }
+
+  .logo__mark {
+    flex: none;
+  }
+
+  .logo__of {
+    color: var(--color-accent);
+  }
+</style>

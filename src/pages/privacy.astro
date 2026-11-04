@@ -1,0 +1,105 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/ui/PageHero.astro';
+import { getTool } from '../data/tools';
+import { breadcrumbSchema, graph, type Crumb } from '../lib/seo';
+
+/*
+ * Keep this page in sync with reality. If analytics, cookies, forms or any
+ * third-party script are added to the site, this page must be updated first.
+ */
+const lastUpdated = '2026-11-05';
+const sqlCompare = getTool('sql-compare');
+
+const path = '/privacy/';
+const crumbs: Crumb[] = [
+  { name: 'Home', path: '/' },
+  { name: 'Privacy', path },
+];
+
+const seo = {
+  title: 'Privacy Policy',
+  description:
+    'How AllOfCode handles data: no cookies, no analytics and no third-party scripts on allofcode.com, and SQL Compare processes SQL entirely in your browser.',
+  path,
+  jsonLd: graph(breadcrumbSchema(crumbs)),
+};
+---
+
+<BaseLayout {...seo}>
+  <PageHero eyebrow="Legal" title="Privacy policy" crumbs={crumbs}>
+    <p>
+      Last updated <time datetime={lastUpdated}>{lastUpdated}</time>.
+    </p>
+  </PageHero>
+
+  <section class="section">
+    <div class="container prose">
+      <h2>Summary</h2>
+      <p>
+        allofcode.com is a static website. It sets no cookies, runs no analytics, has no forms and
+        loads no third-party scripts or fonts. AllOfCode tools are designed to process your input on
+        your own device wherever possible.
+      </p>
+
+      <h2>This website (allofcode.com)</h2>
+      <ul>
+        <li>
+          <strong>No cookies</strong> and no local storage are used.
+        </li>
+        <li>
+          <strong>No analytics</strong> or tracking scripts are loaded.
+        </li>
+        <li>
+          <strong>No third-party requests.</strong> Fonts and images are served from allofcode.com.
+        </li>
+        <li>
+          <strong>Hosting.</strong> The site is served by a hosting and CDN provider. Like any web
+          server, it receives technical request data (such as your IP address, browser user agent
+          and the page requested) in order to deliver and protect the site, and it may keep this in
+          logs under its own policies.
+        </li>
+      </ul>
+
+      <h2>SQL Compare</h2>
+      <p>
+        <a href={sqlCompare.pagePath}>SQL Compare</a> runs at
+        <a href={sqlCompare.appUrl}>sql-compare.allofcode.com</a>.
+      </p>
+      <ul>
+        <li>
+          The SQL you paste or upload is processed <strong>entirely in your browser</strong>. It is
+          not uploaded to a server.
+        </li>
+        <li>
+          The app loads no analytics and makes no third-party requests. Its Content Security Policy
+          only allows connections to its own origin.
+        </li>
+        <li>
+          By default, your two inputs are saved as drafts in your browser's local storage so they
+          survive a reload. This data stays on your device. Turn it off with the
+          <strong>Save drafts</strong> option, or clear it by clearing site data in your browser.
+        </li>
+        <li>Preferences such as dialect and theme are also stored locally in your browser.</li>
+        <li>A service worker caches the app's files on your device so it works offline.</li>
+      </ul>
+
+      <h2>External links</h2>
+      <p>
+        Some pages link to other sites, such as GitHub for issue reports. Those sites have their own
+        privacy policies.
+      </p>
+
+      <h2>Changes</h2>
+      <p>
+        If the way data is handled changes, for example if analytics are introduced, this page will
+        be updated before the change goes live, and the date above will change.
+      </p>
+
+      <h2>Contact</h2>
+      <p>
+        Questions about this policy can be raised through the <a href="/contact/">contact page</a>.
+      </p>
+    </div>
+  </section>
+</BaseLayout>
