@@ -106,6 +106,23 @@ describe('pages', () => {
         }
       });
 
+      test('web fonts use font-display: optional and are preloaded (no swap layout shift)', () => {
+        const displays = [...page.html.matchAll(/font-display:\s*([a-z]+)/g)].map((m) => m[1]);
+        assert.ok(displays.length > 0, 'no @font-face found');
+        assert.ok(
+          displays.every((d) => d === 'optional'),
+          `font-display values: ${displays.join(', ')}`,
+        );
+        const fontUrls = new Set(
+          [...page.html.matchAll(/url\((\/_astro\/[^)]+\.woff2)\)/g)].map((m) => m[1]),
+        );
+        for (const [, href] of page.html.matchAll(
+          /<link rel="preload" href="([^"]+)" as="font"/g,
+        )) {
+          assert.ok(fontUrls.has(href), `preloaded font not used by CSS: ${href}`);
+        }
+      });
+
       test('has no inline executable scripts (CSP script-src self)', () => {
         for (const [tag] of page.html.matchAll(/<script\b[^>]*>/g)) {
           const type = attr(tag, 'type');

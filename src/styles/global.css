@@ -1,5 +1,4 @@
-@import '@fontsource-variable/inter/wght.css';
-@import '@fontsource-variable/jetbrains-mono/wght.css';
+@import './fonts.css';
 @import './tokens.css';
 
 /* ---------- Reset ---------- */

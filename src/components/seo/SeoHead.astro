@@ -4,6 +4,7 @@
  * Every page passes its own title/description; nothing is inherited silently.
  */
 import interLatin from '@fontsource-variable/inter/files/inter-latin-wght-normal.woff2?url';
+import monoLatin from '@fontsource-variable/jetbrains-mono/files/jetbrains-mono-latin-wght-normal.woff2?url';
 import { site } from '../../data/site';
 import { absoluteUrl } from '../../lib/seo';
 
@@ -46,6 +47,7 @@ const image = absoluteUrl(ogImage);
 {noindex ? <meta name="robots" content="noindex" /> : <link rel="canonical" href={canonical} />}
 
 <link rel="preload" href={interLatin} as="font" type="font/woff2" crossorigin />
+<link rel="preload" href={monoLatin} as="font" type="font/woff2" crossorigin />
 
 <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
 <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png" />
