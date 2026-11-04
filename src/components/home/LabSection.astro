@@ -1,0 +1,140 @@
+---
+import SectionHeading from '../ui/SectionHeading.astro';
+
+/** What the Lab is for: kinds of work, not announced projects. */
+const purposes = [
+  ['Interactive demos', 'Small, hands-on explanations of how something works under the hood.'],
+  ['Performance experiments', 'Measured comparisons, with the method and numbers published.'],
+  ['Code visualizers', 'Ways to see structure, data flow or diffs instead of reading them.'],
+  ['Workflow prototypes', 'Rough ideas for developer tooling, shared before they become tools.'],
+  ['Defensive security', 'Educational material and testing utilities for systems you own.'],
+] as const;
+---
+
+<section id="labs" class="section labs" aria-labelledby="labs-title">
+  <div class="labs__scan" aria-hidden="true"></div>
+  <div class="container labs__inner">
+    <SectionHeading
+      eyebrow="Hacker zone / Labs"
+      title="A lab for curious experiments"
+      id="labs-title"
+    >
+      <p>
+        The Lab is where ideas get taken apart to see how they work. Nothing is published there yet;
+        this is what it is for.
+      </p>
+    </SectionHeading>
+
+    <ol class="labs__list">
+      {purposes.map(([title, detail], i) => (
+        <li class="labs__item">
+          <span class="labs__addr" aria-hidden="true">
+            0x{(i + 1).toString(16).padStart(2, '0').toUpperCase()}
+          </span>
+          <h3 class="labs__title">{title}</h3>
+          <p class="labs__detail">{detail}</p>
+        </li>
+      ))}
+    </ol>
+
+    <p class="labs__policy">
+      <span class="mono labs__policy-tag">policy</span>
+      “Hacker” here means curiosity and building things. Security content on AllOfCode is
+      educational and defensive. It is not for getting into systems you aren't authorised to access.
+    </p>
+  </div>
+</section>
+
+<style>
+  .labs {
+    position: relative;
+    overflow: hidden;
+    background: var(--color-bg-sunken);
+    isolation: isolate;
+  }
+
+  .labs__scan {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: repeating-linear-gradient(
+      to bottom,
+      rgb(72 242 154 / 0.025) 0 1px,
+      transparent 1px 4px
+    );
+    mask-image: radial-gradient(60rem 30rem at 50% 0%, black, transparent 75%);
+    -webkit-mask-image: radial-gradient(60rem 30rem at 50% 0%, black, transparent 75%);
+  }
+
+  .labs__inner {
+    display: grid;
+    gap: var(--space-7);
+  }
+
+  .labs__list {
+    display: grid;
+    gap: 1px;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    background: var(--color-border);
+    list-style: none;
+  }
+
+  @media (min-width: 40rem) {
+    .labs__list {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .labs__list {
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+    }
+  }
+
+  .labs__item {
+    display: grid;
+    align-content: start;
+    gap: var(--space-2);
+    padding: var(--space-5);
+    background: var(--color-surface);
+  }
+
+  .labs__addr {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-accent);
+  }
+
+  .labs__title {
+    font-size: var(--text-base);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+
+  .labs__detail {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+  }
+
+  .labs__policy {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--space-2) var(--space-3);
+    max-width: 52rem;
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+  }
+
+  .labs__policy-tag {
+    padding: 0.1rem 0.5rem;
+    border: 1px solid var(--color-border-strong);
+    border-radius: var(--radius-sm);
+    font-size: var(--text-xs);
+    color: var(--color-amber);
+  }
+</style>

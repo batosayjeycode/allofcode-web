@@ -1,0 +1,143 @@
+---
+import SectionHeading from '../ui/SectionHeading.astro';
+import WindowFrame from '../ui/WindowFrame.astro';
+
+/** Focus areas for future scripts. These are topics, not published content. */
+const focusAreas = [
+  'Shell / Bash',
+  'JavaScript / Node.js',
+  'Python',
+  'Database / SQL',
+  'Automation & DevOps',
+];
+
+/** The publishing standard every script page will follow. */
+const anatomy = [
+  ['What it does', 'One task, stated plainly.'],
+  ['Requirements', 'Runtime, versions, permissions.'],
+  ['The code', 'Tested before it is published.'],
+  ['Expected output', 'So you can tell it worked.'],
+  ['Safety notes', 'Anything destructive, flagged up front.'],
+  ['Last updated', 'A real date, kept current.'],
+] as const;
+---
+
+<section id="scripting" class="section scripting" aria-labelledby="scripting-title">
+  <div class="container scripting__grid">
+    <div class="scripting__copy">
+      <SectionHeading
+        eyebrow="Scripting zone"
+        title="Scripts you can read before you run"
+        id="scripting-title"
+      >
+        <p>
+          Small, focused scripts for the chores that come up again and again: cleaning up a repo,
+          checking a database, wiring a quick automation.
+        </p>
+        <p>
+          No scripts are published yet. Each one will get its own page and will only go up once it
+          has been tested.
+        </p>
+      </SectionHeading>
+
+      <div class="scripting__areas">
+        <h3 class="scripting__label">Focus areas</h3>
+        <ul class="chip-list">
+          {focusAreas.map((area) => (
+            <li class="chip">{area}</li>
+          ))}
+        </ul>
+      </div>
+
+      <a href="/tools/" class="link-arrow">
+        Use the tools that are live today
+      </a>
+    </div>
+
+    <WindowFrame title="script-page.md" meta="publishing standard" class="scripting__panel">
+      <ol class="anatomy">
+        {anatomy.map(([title, detail], i) => (
+          <li>
+            <span class="anatomy__n" aria-hidden="true">
+              {String(i + 1).padStart(2, '0')}
+            </span>
+            <span class="anatomy__h">## {title}</span>
+            <span class="anatomy__d">{detail}</span>
+          </li>
+        ))}
+      </ol>
+    </WindowFrame>
+  </div>
+</section>
+
+<style>
+  .scripting__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-7);
+    align-items: center;
+  }
+
+  @media (min-width: 60rem) {
+    .scripting__grid {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 0.9fr);
+    }
+  }
+
+  .scripting__copy {
+    display: grid;
+    gap: var(--space-6);
+    justify-items: start;
+  }
+
+  .scripting__areas {
+    display: grid;
+    gap: var(--space-3);
+  }
+
+  .scripting__label {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-text-subtle);
+  }
+
+  .anatomy {
+    display: grid;
+    margin: 0;
+    padding: var(--space-3) 0;
+    list-style: none;
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+  }
+
+  .anatomy li {
+    display: grid;
+    grid-template-columns: 2.5rem 1fr;
+    gap: 0 var(--space-2);
+    padding: var(--space-2) var(--space-5) var(--space-2) var(--space-4);
+  }
+
+  .anatomy li:nth-child(odd) {
+    background: rgb(255 255 255 / 0.015);
+  }
+
+  .anatomy__n {
+    grid-row: span 2;
+    color: var(--color-text-subtle);
+    text-align: right;
+    padding-right: var(--space-2);
+    border-right: 1px solid var(--color-border);
+  }
+
+  .anatomy__h {
+    color: var(--color-cyan);
+  }
+
+  .anatomy__d {
+    color: var(--color-text-muted);
+    font-family: var(--font-sans);
+  }
+</style>

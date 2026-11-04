@@ -1,0 +1,30 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import HeroSection from '../components/home/HeroSection.astro';
+import FeaturedToolSection from '../components/home/FeaturedToolSection.astro';
+import ToolsPreview from '../components/home/ToolsPreview.astro';
+import ScriptingSection from '../components/home/ScriptingSection.astro';
+import LabSection from '../components/home/LabSection.astro';
+import PrinciplesSection from '../components/home/PrinciplesSection.astro';
+import { graph, organizationSchema, websiteSchema } from '../lib/seo';
+
+// Homepage targets the brand and the broad "developer tools and scripts" intent.
+// SQL-specific intent belongs to /tools/sql-compare/.
+const seo = {
+  title: 'AllOfCode: Developer Tools, Scripts & Experiments',
+  rawTitle: true,
+  description:
+    'AllOfCode is a developer workbench of practical tools, tested scripts and technical experiments. Start with SQL Compare, a browser-only SQL diff tool.',
+  path: '/',
+  jsonLd: graph(organizationSchema(), websiteSchema()),
+};
+---
+
+<BaseLayout {...seo}>
+  <HeroSection />
+  <FeaturedToolSection />
+  <ToolsPreview />
+  <ScriptingSection />
+  <LabSection />
+  <PrinciplesSection />
+</BaseLayout>

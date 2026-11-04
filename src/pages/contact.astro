@@ -1,0 +1,93 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/ui/PageHero.astro';
+import { site } from '../data/site';
+import { tools } from '../data/tools';
+import { breadcrumbSchema, graph, type Crumb } from '../lib/seo';
+
+const path = '/contact/';
+const crumbs: Crumb[] = [
+  { name: 'Home', path: '/' },
+  { name: 'Contact', path },
+];
+
+const trackers = tools.filter((t) => t.sourceUrl);
+
+const seo = {
+  title: 'Contact',
+  description:
+    'How to reach AllOfCode: report a bug, request a feature or suggest a new developer tool.',
+  path,
+  jsonLd: graph(breadcrumbSchema(crumbs)),
+};
+---
+
+<BaseLayout {...seo}>
+  <PageHero eyebrow="Contact" title="Get in touch" crumbs={crumbs}>
+    <p>Bug reports, feature requests and ideas for new tools are all welcome.</p>
+  </PageHero>
+
+  <section class="section">
+    <div class="container contact">
+      {trackers.map((t) => (
+        <article class="contact__card">
+          <p class="mono contact__label">{t.name}</p>
+          <h2>Report a bug or request a feature</h2>
+          <p class="muted">
+            Issues for {t.name} are tracked publicly on GitHub. Please include your browser, the
+            dialect you selected and, if you can, a small SQL sample that shows the problem. Don't
+            post confidential SQL.
+          </p>
+          <a href={`${t.sourceUrl}/issues`} class="btn btn--primary">
+            Open {t.name} issues on GitHub
+          </a>
+        </article>
+      ))}
+
+      {site.contactEmail && (
+        <article class="contact__card">
+          <p class="mono contact__label">Email</p>
+          <h2>Everything else</h2>
+          <p class="muted">For anything that isn't a bug report, email us.</p>
+          <a href={`mailto:${site.contactEmail}`} class="btn">
+            {site.contactEmail}
+          </a>
+        </article>
+      )}
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .contact {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-5);
+  }
+
+  @media (min-width: 52rem) {
+    .contact {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  .contact__card {
+    display: grid;
+    align-content: start;
+    justify-items: start;
+    gap: var(--space-4);
+    padding: var(--space-6);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    background: var(--color-surface);
+  }
+
+  .contact__card h2 {
+    font-size: var(--text-lg);
+  }
+
+  .contact__label {
+    font-size: var(--text-xs);
+    color: var(--color-accent);
+  }
+</style>

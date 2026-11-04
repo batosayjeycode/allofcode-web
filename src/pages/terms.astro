@@ -1,0 +1,90 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/ui/PageHero.astro';
+import { breadcrumbSchema, graph, type Crumb } from '../lib/seo';
+
+const lastUpdated = '2026-11-05';
+
+const path = '/terms/';
+const crumbs: Crumb[] = [
+  { name: 'Home', path: '/' },
+  { name: 'Terms', path },
+];
+
+const seo = {
+  title: 'Terms of Use',
+  description:
+    'Terms for using allofcode.com and AllOfCode tools such as SQL Compare: provided as is, free to use, with your results always yours to verify.',
+  path,
+  jsonLd: graph(breadcrumbSchema(crumbs)),
+};
+---
+
+<BaseLayout {...seo}>
+  <PageHero eyebrow="Legal" title="Terms of use" crumbs={crumbs}>
+    <p>
+      Last updated <time datetime={lastUpdated}>{lastUpdated}</time>.
+    </p>
+  </PageHero>
+
+  <section class="section">
+    <div class="container prose">
+      <p>
+        These terms apply to allofcode.com and to the tools published by AllOfCode, including SQL
+        Compare at sql-compare.allofcode.com. By using them, you agree to these terms.
+      </p>
+
+      <h2>Using the tools</h2>
+      <ul>
+        <li>The tools are free to use and do not require an account.</li>
+        <li>
+          You are responsible for the content you put into a tool, and for having the right to use
+          it.
+        </li>
+        <li>
+          Don't use the site or tools to break the law, to attack or disrupt the service, or to
+          access systems you are not authorised to access.
+        </li>
+      </ul>
+
+      <h2>Check results before you rely on them</h2>
+      <p>
+        Tools are aids, not guarantees. For example, SQL Compare classifies differences based on the
+        rules it can prove, and its documentation lists known limitations. Always review results
+        yourself before acting on them, especially before running SQL against a production database.
+      </p>
+
+      <h2>No warranty</h2>
+      <p>
+        The site and tools are provided “as is” and “as available”, without warranties of any kind,
+        express or implied, including fitness for a particular purpose and non-infringement. Tools
+        may change, be unavailable, or be discontinued at any time.
+      </p>
+
+      <h2>Limitation of liability</h2>
+      <p>
+        To the extent permitted by law, AllOfCode is not liable for any indirect, incidental or
+        consequential damages, or for any loss of data, revenue or profit, arising from your use of
+        the site or tools.
+      </p>
+
+      <h2>Content and code</h2>
+      <p>
+        The text, design and branding of allofcode.com belong to AllOfCode. Code that is published
+        under a specific licence, such as scripts or open-source repositories, is governed by the
+        licence stated alongside it.
+      </p>
+
+      <h2>Changes to these terms</h2>
+      <p>
+        These terms may be updated. The date above shows when they last changed. Continuing to use
+        the site after a change means you accept the updated terms.
+      </p>
+
+      <h2>Contact</h2>
+      <p>
+        Questions about these terms can be raised through the <a href="/contact/">contact page</a>.
+      </p>
+    </div>
+  </section>
+</BaseLayout>

@@ -1,0 +1,85 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { tools } from '../data/tools';
+
+// Cloudflare Pages serves dist/404.html with a real 404 status for unknown paths.
+const seo = {
+  title: 'Page not found',
+  description:
+    'The page you were looking for does not exist on AllOfCode. Try the tools directory or the SQL Compare page instead.',
+  path: '/404/',
+  noindex: true,
+};
+---
+
+<BaseLayout {...seo}>
+  <section class="section notfound">
+    <div class="container notfound__inner">
+      <p class="mono notfound__code" aria-hidden="true">
+        <span>$</span> cd {'<path>'}
+        <br />
+        <span class="notfound__err">error 404: no such page</span>
+      </p>
+      <h1>Page not found</h1>
+      <p class="lead">
+        This page doesn't exist, or it has moved. Here are some places to go instead.
+      </p>
+      <ul class="notfound__links">
+        <li>
+          <a href="/" class="link-arrow">
+            Home
+          </a>
+        </li>
+        <li>
+          <a href="/tools/" class="link-arrow">
+            Tools directory
+          </a>
+        </li>
+        {tools.map((t) => (
+          <li>
+            <a href={t.pagePath} class="link-arrow">
+              {t.name}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .notfound__inner {
+    display: grid;
+    gap: var(--space-5);
+    justify-items: start;
+    max-width: 40rem;
+  }
+
+  .notfound h1 {
+    font-size: var(--text-2xl);
+  }
+
+  .notfound__code {
+    padding: var(--space-4) var(--space-5);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background: var(--color-surface);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+  }
+
+  .notfound__code span:first-child {
+    color: var(--color-accent);
+  }
+
+  .notfound__err {
+    color: var(--color-amber);
+  }
+
+  .notfound__links {
+    display: grid;
+    gap: var(--space-2);
+    padding: 0;
+    list-style: none;
+  }
+</style>

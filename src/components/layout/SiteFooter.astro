@@ -1,0 +1,162 @@
+---
+import Logo from '../ui/Logo.astro';
+import { legalNav, site } from '../../data/site';
+import { tools } from '../../data/tools';
+
+// Year of the build; the site is rebuilt on every deploy.
+const year = new Date().getFullYear();
+
+const columns = [
+  {
+    title: 'Tools',
+    links: [
+      ...tools.map((t) => ({ label: t.name, href: t.pagePath })),
+      { label: 'All tools', href: '/tools/' },
+    ],
+  },
+  {
+    title: 'Workbench',
+    links: [
+      { label: 'Scripts', href: '/#scripting' },
+      { label: 'Labs', href: '/#labs' },
+      { label: 'About', href: '/about/' },
+    ],
+  },
+  { title: 'Legal', links: legalNav },
+];
+---
+
+<footer class="site-footer">
+  <div class="container site-footer__grid">
+    <div class="site-footer__brand">
+      <a href="/" aria-label="AllOfCode home" class="site-footer__logo">
+        <Logo />
+      </a>
+      <p class="muted">{site.description}</p>
+    </div>
+
+    {columns.map((col) => (
+      <nav class="site-footer__col" aria-label={col.title}>
+        <h2 class="site-footer__title">{col.title}</h2>
+        <ul>
+          {col.links.map((link) => (
+            <li>
+              <a href={link.href}>{link.label}</a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+    ))}
+  </div>
+
+  <div class="container">
+    <div class="site-footer__bottom">
+      <p>
+        © {year} {site.name}
+      </p>
+      {site.socialProfiles.length > 0 && (
+        <ul class="site-footer__social">
+          {site.socialProfiles.map((p) => (
+            <li>
+              <a href={p.url} rel="me noopener">
+                {p.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      )}
+      <p class="mono site-footer__sig" aria-hidden="true">
+        $ exit 0
+      </p>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    border-top: 1px solid var(--color-border);
+    background: var(--color-bg-sunken);
+    padding-top: var(--space-8);
+    font-size: var(--text-sm);
+  }
+
+  .site-footer__grid {
+    display: grid;
+    gap: var(--space-6);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .site-footer__brand {
+    grid-column: 1 / -1;
+    max-width: 22rem;
+  }
+
+  .site-footer__logo {
+    display: inline-flex;
+    margin-bottom: var(--space-3);
+    text-decoration: none;
+  }
+
+  @media (min-width: 48rem) {
+    .site-footer__grid {
+      grid-template-columns: 2fr repeat(3, 1fr);
+    }
+
+    .site-footer__brand {
+      grid-column: auto;
+    }
+  }
+
+  .site-footer__title {
+    margin-bottom: var(--space-3);
+    color: var(--color-text);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .site-footer__col ul {
+    display: grid;
+    gap: var(--space-1);
+    padding: 0;
+    list-style: none;
+  }
+
+  .site-footer__col a,
+  .site-footer__social a {
+    display: inline-block;
+    padding-block: var(--space-1);
+    color: var(--color-text-muted);
+    text-decoration: none;
+  }
+
+  .site-footer__col a:hover,
+  .site-footer__social a:hover {
+    color: var(--color-accent);
+  }
+
+  .site-footer__bottom {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+    margin-top: var(--space-7);
+    padding-block: var(--space-5);
+    border-top: 1px solid var(--color-border);
+    color: var(--color-text-subtle);
+  }
+
+  .site-footer__social {
+    display: flex;
+    gap: var(--space-4);
+    padding: 0;
+    list-style: none;
+  }
+
+  .site-footer__sig {
+    font-size: var(--text-xs);
+  }
+</style>

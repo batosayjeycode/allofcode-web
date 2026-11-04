@@ -1,0 +1,71 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          # Astro 7 needs Node >= 22.23.4
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npm run format:check
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm run build
+      # SEO and integrity tests against dist/
+      - run: npm test
+      - uses: actions/upload-artifact@v4
+        with:
+          name: web-dist
+          path: dist
+
+  qa:
+    runs-on: ubuntu-latest
+    needs: check
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      # Test the exact build that will be deployed.
+      - uses: actions/download-artifact@v4
+        with:
+          name: web-dist
+          path: dist
+      # Accessibility (axe, WCAG 2.1 AA), responsive overflow, mobile nav, 404,
+      # CLS / LCP and external links.
+      - run: npm run qa
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: qa-report
+          path: qa-report
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: [check, qa]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    concurrency:
+      group: deploy-production
+      cancel-in-progress: false
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: web-dist
+          path: dist
+      - uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy dist --project-name=allofcode-web --branch=main

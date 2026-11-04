@@ -1,0 +1,182 @@
+---
+import WindowFrame from '../ui/WindowFrame.astro';
+import { tools } from '../../data/tools';
+
+/*
+ * The panel is a static manifest file generated from the tool registry, so it
+ * always reflects what is actually published. It does not simulate a command.
+ */
+---
+
+<section class="hero" aria-labelledby="hero-title">
+  <div class="hero__bg" aria-hidden="true"></div>
+  <div class="container hero__grid">
+    <div class="hero__copy">
+      <p class="eyebrow">Developer workbench</p>
+      <h1 id="hero-title" class="hero__title">
+        Tools, Scripts <span class="hero__amp">&amp;</span> Experiments for{' '}
+        <span class="hero__accent">Developers.</span>
+      </h1>
+      <p class="hero__lead">
+        Practical utilities and technical experiments for the everyday work of building, debugging,
+        and shipping software.
+      </p>
+      <div class="btn-row">
+        <a href="/tools/" class="btn btn--primary">
+          Explore Tools
+        </a>
+        <a href="/tools/sql-compare/" class="btn">
+          Explore SQL Compare
+        </a>
+      </div>
+    </div>
+
+    <WindowFrame title="allofcode.yml" meta="workbench manifest" class="hero__panel">
+      <pre
+        class="manifest"
+        aria-label="Workbench manifest: published tools, scripts and labs"
+      ><code><span class="c"># What is on the workbench right now</span>
+<span class="k">tools</span>:
+{tools.map((t) => (<Fragment><span class="p">  - </span><span class="k">name</span>: <span class="s">{t.slug}</span>
+<span class="p">    </span><span class="k">status</span>: <span class="ok">{t.status}</span>
+<span class="p">    </span><span class="k">runs</span>: <span class="s">in-browser</span>
+<span class="p">    </span><span class="k">url</span>: <a class="s" href={t.appUrl}>{t.appUrl.replace('https://', '').replace(/\/$/, '')}</a>{'\n'}</Fragment>))}<span class="k">scripts</span>: <span class="p">[]</span>  <span class="c"># published once tested</span>
+<span class="k">labs</span>: <span class="p">[]</span>     <span class="c"># added when ready</span><span class="cursor" aria-hidden="true"></span></code></pre>
+    </WindowFrame>
+  </div>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    overflow: hidden;
+    padding-block: clamp(3rem, 2rem + 5vw, 6.5rem) clamp(1rem, 0.5rem + 2vw, 2.5rem);
+    isolation: isolate;
+  }
+
+  .hero__bg {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background:
+      radial-gradient(50rem 26rem at 78% 10%, rgb(76 201 240 / 0.09), transparent 70%),
+      radial-gradient(40rem 24rem at 10% 0%, rgb(72 242 154 / 0.08), transparent 70%),
+      linear-gradient(var(--color-grid) 1px, transparent 1px) 0 0 / 48px 48px,
+      linear-gradient(90deg, var(--color-grid) 1px, transparent 1px) 0 0 / 48px 48px;
+    mask-image: linear-gradient(to bottom, black 55%, transparent);
+    -webkit-mask-image: linear-gradient(to bottom, black 55%, transparent);
+  }
+
+  .hero__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-7);
+    align-items: center;
+  }
+
+  @media (min-width: 60rem) {
+    .hero__grid {
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+      gap: var(--space-8);
+    }
+  }
+
+  .hero__copy {
+    display: grid;
+    gap: var(--space-5);
+    justify-items: start;
+  }
+
+  .hero__title {
+    font-size: var(--text-3xl);
+    font-weight: 700;
+    letter-spacing: -0.035em;
+    line-height: 1.02;
+  }
+
+  .hero__amp {
+    color: var(--color-text-subtle);
+    font-weight: 500;
+  }
+
+  .hero__accent {
+    background: linear-gradient(100deg, var(--color-accent) 10%, var(--color-cyan) 90%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .hero__lead {
+    max-width: 34rem;
+    font-size: var(--text-md);
+    color: var(--color-text-muted);
+  }
+
+  .hero__panel {
+    width: 100%;
+  }
+
+  .manifest {
+    margin: 0;
+    padding: var(--space-5);
+    overflow-x: auto;
+    font-size: clamp(0.75rem, 0.7rem + 0.25vw, 0.875rem);
+    line-height: 1.75;
+    color: var(--color-text);
+    tab-size: 2;
+  }
+
+  .manifest .c {
+    color: var(--color-text-subtle);
+    font-style: italic;
+  }
+
+  .manifest .k {
+    color: var(--color-cyan);
+  }
+
+  .manifest .s {
+    color: var(--color-text);
+  }
+
+  .manifest a.s {
+    text-decoration: underline;
+    text-decoration-color: var(--color-border-strong);
+    text-underline-offset: 0.2em;
+  }
+
+  .manifest a.s:hover {
+    color: var(--color-accent);
+    text-decoration-color: currentColor;
+  }
+
+  .manifest .p {
+    color: var(--color-text-subtle);
+  }
+
+  .manifest .ok {
+    color: var(--color-accent);
+  }
+
+  .cursor {
+    display: inline-block;
+    width: 0.55em;
+    height: 1.1em;
+    margin-left: 0.15em;
+    vertical-align: text-bottom;
+    background: var(--color-accent);
+    opacity: 0.85;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .cursor {
+      animation: blink 1.2s steps(1) infinite;
+    }
+
+    @keyframes blink {
+      50% {
+        opacity: 0;
+      }
+    }
+  }
+</style>
