@@ -282,9 +282,11 @@ describe('hosting configuration', () => {
     assert.match(headers, /https:\/\/:version\.:project\.pages\.dev\/\*\s+X-Robots-Tag: noindex/);
   });
 
-  test('CSP disallows inline scripts', () => {
+  test('CSP disallows inline scripts and only allows Cloudflare Web Analytics as a third party', () => {
     const csp = headers.match(/Content-Security-Policy: (.+)/)[1];
-    assert.match(csp, /script-src 'self'(;|$)/);
+    const directive = (name) => csp.match(new RegExp(`(?:^|; )${name} ([^;]+)`))[1].trim();
+    assert.equal(directive('script-src'), "'self' https://static.cloudflareinsights.com");
+    assert.equal(directive('connect-src'), "'self' https://cloudflareinsights.com");
   });
 
   test('no redirects that could touch the SQL Compare subdomain', () => {

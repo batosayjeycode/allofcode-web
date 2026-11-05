@@ -20,7 +20,7 @@ const crumbs: Crumb[] = [
 const seo = {
   title: 'Privacy Policy',
   description:
-    'How AllOfCode handles data: no cookies, no analytics and no third-party scripts on allofcode.com, and SQL Compare processes SQL entirely in your browser.',
+    'How AllOfCode handles data: no cookies and only cookieless Cloudflare Web Analytics on allofcode.com, and SQL Compare processes SQL entirely in your browser.',
   path,
   jsonLd: graph(breadcrumbSchema(crumbs)),
 };
@@ -37,9 +37,9 @@ const seo = {
     <div class="container prose">
       <h2>Summary</h2>
       <p>
-        allofcode.com is a static website. It sets no cookies, runs no analytics, has no forms and
-        loads no third-party scripts or fonts. AllOfCode tools are designed to process your input on
-        your own device wherever possible.
+        allofcode.com is a static website. It sets no cookies and has no forms. It uses Cloudflare
+        Web Analytics, a cookieless analytics service, to count page views. AllOfCode tools are
+        designed to process your input on your own device wherever possible.
       </p>
 
       <h2>This website (allofcode.com)</h2>
@@ -48,10 +48,15 @@ const seo = {
           <strong>No cookies</strong> and no local storage are used.
         </li>
         <li>
-          <strong>No analytics</strong> or tracking scripts are loaded.
+          <strong>Cloudflare Web Analytics.</strong> A small script from Cloudflare
+          (static.cloudflareinsights.com) reports aggregate page-view and performance data, such as
+          the page visited, referrer, browser, country and load times. It does not use cookies,
+          local storage or fingerprinting, and is not used to track you across sites. See
+          <a href="https://www.cloudflare.com/privacypolicy/">Cloudflare's privacy policy</a>.
         </li>
         <li>
-          <strong>No third-party requests.</strong> Fonts and images are served from allofcode.com.
+          <strong>No other third-party requests.</strong> Fonts and images are served from
+          allofcode.com.
         </li>
         <li>
           <strong>Hosting.</strong> The site is served by a hosting and CDN provider. Like any web
@@ -92,8 +97,9 @@ const seo = {
 
       <h2>Changes</h2>
       <p>
-        If the way data is handled changes, for example if analytics are introduced, this page will
-        be updated before the change goes live, and the date above will change.
+        If the way data is handled changes, for example if a different analytics service is
+        introduced, this page will be updated before the change goes live, and the date above will
+        change.
       </p>
 
       <h2>Contact</h2>
