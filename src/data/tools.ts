@@ -44,6 +44,24 @@ export const tools: Tool[] = [
     ],
     tags: ['PostgreSQL', 'MySQL', 'Diff', 'Browser-only'],
   },
+  {
+    slug: 'js-quiz',
+    name: 'JS Quiz',
+    summary:
+      'Predict what a JavaScript snippet prints, then run it in a sandbox and see whether you were right, with an explanation for every question.',
+    category: 'JavaScript',
+    status: 'live',
+    appUrl: 'https://js-quiz.allofcode.com/',
+    pagePath: '/tools/js-quiz/',
+    sourceUrl: 'https://github.com/batosayjeycode/allofcode-js-quiz',
+    highlights: [
+      '10 questions on coercion, scope, closures, promises and the event loop',
+      'Your answer is checked against the real output of the code, not a stored string',
+      'Code runs in a throwaway Web Worker with network access disabled and a 3 s timeout',
+      'Scored summary at the end, with an explanation after every question',
+    ],
+    tags: ['JavaScript', 'Event loop', 'Interview prep', 'Browser-only'],
+  },
 ];
 
 export function getTool(slug: string): Tool {

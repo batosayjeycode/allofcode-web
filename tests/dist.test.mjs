@@ -67,6 +67,7 @@ describe('pages', () => {
       '/privacy/',
       '/terms/',
       '/tools/',
+      '/tools/js-quiz/',
       '/tools/sql-compare/',
     ]);
   });
@@ -230,8 +231,24 @@ describe('structured data', () => {
     assert.ok(existsSync(join(dist, new URL(app.screenshot).pathname)), 'screenshot exists');
   });
 
+  test('JS Quiz page has WebApplication and BreadcrumbList', () => {
+    assert.deepEqual(types('/tools/js-quiz/').sort(), ['BreadcrumbList', 'WebApplication']);
+    const app = byPath['/tools/js-quiz/'][0]['@graph'].find((n) => n['@type'] === 'WebApplication');
+    assert.equal(app.url, 'https://js-quiz.allofcode.com/');
+    assert.equal(app.applicationCategory, 'DeveloperApplication');
+    assert.equal(app.aggregateRating, undefined);
+    assert.equal(app.review, undefined);
+    assert.ok(existsSync(join(dist, new URL(app.screenshot).pathname)), 'screenshot exists');
+  });
+
   test('nested pages have breadcrumbs pointing at real pages', () => {
-    for (const path of ['/tools/', '/tools/sql-compare/', '/about/', '/contact/']) {
+    for (const path of [
+      '/tools/',
+      '/tools/sql-compare/',
+      '/tools/js-quiz/',
+      '/about/',
+      '/contact/',
+    ]) {
       const crumbs = byPath[path]
         .flatMap((d) => d['@graph'])
         .find((n) => n['@type'] === 'BreadcrumbList');

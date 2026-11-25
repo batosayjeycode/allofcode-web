@@ -1,0 +1,48 @@
+---
+/**
+ * Real screenshot of JS Quiz (desktop, question 1 answered and run),
+ * captured from https://js-quiz.allofcode.com/. Served as responsive AVIF/WebP.
+ */
+import { Picture } from 'astro:assets';
+import WindowFrame from '../ui/WindowFrame.astro';
+import shot from '../../assets/js-quiz/js-quiz-desktop.png';
+
+interface Props {
+  /** true for above-the-fold placement (eager, high priority). */
+  priority?: boolean;
+  sizes?: string;
+  caption?: string;
+}
+const {
+  priority = false,
+  sizes = '(min-width: 72rem) 640px, (min-width: 52rem) 55vw, 100vw',
+  caption,
+} = Astro.props;
+---
+
+<WindowFrame title="js-quiz.allofcode.com" meta="Question 1 of 10">
+  <Picture
+    src={shot}
+    formats={['avif', 'webp']}
+    widths={[480, 720, 960, 1440]}
+    sizes={sizes}
+    alt="JS Quiz after answering question 1, Implicit Type Coercion. Option A, 53 2 10 2, is marked as your answer and correct. The console output panel shows 53 2 10 2, executed successfully in 33 ms, and a Correct banner awards 1 point. A sidebar lists all 10 questions with their topics."
+    loading={priority ? 'eager' : 'lazy'}
+    fetchpriority={priority ? 'high' : 'auto'}
+    decoding="async"
+  />
+  {caption && (
+    <figcaption slot="caption" class="shot-caption">
+      {caption}
+    </figcaption>
+  )}
+</WindowFrame>
+
+<style>
+  .shot-caption {
+    padding: var(--space-3) var(--space-4);
+    border-top: 1px solid var(--color-border);
+    font-size: var(--text-sm);
+    color: var(--color-text-subtle);
+  }
+</style>
