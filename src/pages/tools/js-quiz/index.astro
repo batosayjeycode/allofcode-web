@@ -1,0 +1,1057 @@
+---
+/**
+ * JS Quiz landing page. Every statement here was checked against the JS Quiz
+ * source (github.com/batosayjeycode/allofcode-js-quiz). Update it when the
+ * question bank or the app changes.
+ */
+import { getImage } from 'astro:assets';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../../components/layout/Breadcrumbs.astro';
+import JsQuizShot from '../../../components/tools/JsQuizShot.astro';
+import WindowFrame from '../../../components/ui/WindowFrame.astro';
+import desktopShot from '../../../assets/js-quiz/js-quiz-desktop.png';
+import { getTool } from '../../../data/tools';
+import {
+  absoluteUrl,
+  breadcrumbSchema,
+  graph,
+  softwareApplicationSchema,
+  type Crumb,
+} from '../../../lib/seo';
+
+const tool = getTool('js-quiz');
+const path = tool.pagePath;
+const crumbs: Crumb[] = [
+  { name: 'Home', path: '/' },
+  { name: 'Tools', path: '/tools/' },
+  { name: tool.name, path },
+];
+
+const description =
+  'A free JavaScript output quiz: predict what each snippet prints, run it in a browser sandbox and learn why. Covers closures, promises and the event loop.';
+
+const featureList = [
+  '10 JavaScript output questions across 7 topics, from Basic to Advanced',
+  'Runs each snippet in an isolated Web Worker and compares your prediction with the real result',
+  'Handles console output, thrown errors, async code and timeouts',
+  'Explanation revealed after every question',
+  'Points per question and a scored summary with a performance rating',
+  'Keyboard shortcuts: letter keys to choose, Ctrl/Cmd + Enter to run',
+  'Runs entirely in the browser, no account needed',
+];
+
+const screenshot = await getImage({ src: desktopShot, format: 'png', width: 1440 });
+
+const seo = {
+  title: 'JavaScript Quiz: Predict the Output, Run the Code',
+  description,
+  path,
+  jsonLd: graph(
+    softwareApplicationSchema(tool, {
+      description,
+      featureList,
+      screenshot: absoluteUrl(screenshot.src),
+    }),
+    breadcrumbSchema(crumbs),
+  ),
+};
+
+const toc = [
+  ['what', 'What it is'],
+  ['questions', 'Questions'],
+  ['how-to', 'How to play'],
+  ['judging', 'How answers are judged'],
+  ['scoring', 'Scoring'],
+  ['limitations', 'Limitations'],
+  ['privacy', 'Privacy'],
+  ['faq', 'Questions & answers'],
+] as const;
+
+// Mirrors src/questions/bank/*.js in the JS Quiz repository.
+const questions = [
+  {
+    id: 'JS-001',
+    title: 'Implicit Type Coercion',
+    topic: 'JavaScript Fundamentals',
+    level: 'Basic',
+    points: 1,
+  },
+  {
+    id: 'JS-002',
+    title: 'Shallow Copy with Object Spread',
+    topic: 'Array & Object',
+    level: 'Intermediate',
+    points: 2,
+  },
+  {
+    id: 'JS-003',
+    title: 'Temporal Dead Zone & Shadowing',
+    topic: 'Scope & Hoisting',
+    level: 'Intermediate',
+    points: 2,
+  },
+  {
+    id: 'JS-004',
+    title: 'Closures in Loops: var vs let',
+    topic: 'Scope & Hoisting',
+    level: 'Intermediate',
+    points: 2,
+  },
+  {
+    id: 'JS-005',
+    title: 'Promise Executor Timing',
+    topic: 'Async JavaScript',
+    level: 'Intermediate',
+    points: 2,
+  },
+  {
+    id: 'JS-006',
+    title: 'Missing await in try/catch',
+    topic: 'Async JavaScript',
+    level: 'Advanced',
+    points: 3,
+  },
+  {
+    id: 'JS-007',
+    title: 'Microtasks vs Macrotasks',
+    topic: 'Event Loop',
+    level: 'Intermediate',
+    points: 2,
+  },
+  {
+    id: 'JS-008',
+    title: 'async/await Resumption Order',
+    topic: 'Event Loop',
+    level: 'Advanced',
+    points: 3,
+  },
+  {
+    id: 'JS-009',
+    title: 'Losing this in Strict Mode',
+    topic: 'Functions',
+    level: 'Advanced',
+    points: 3,
+  },
+  {
+    id: 'JS-010',
+    title: 'return Inside finally',
+    topic: 'Error Handling',
+    level: 'Advanced',
+    points: 3,
+  },
+];
+const totalPoints = questions.reduce((sum, q) => sum + q.points, 0);
+
+const outcomes = [
+  {
+    tag: 'Output',
+    title: 'Printed lines',
+    body: 'The option lists the exact lines the console prints, in order.',
+  },
+  {
+    tag: 'Values',
+    title: 'Logged values',
+    body: 'Arrays and objects are compared by structure, not by how they happen to be formatted as text.',
+  },
+  {
+    tag: 'Throws',
+    title: 'An error',
+    body: 'The code throws, for example a TypeError, optionally after printing some lines first.',
+  },
+  {
+    tag: 'Timeout',
+    title: 'Never finishes',
+    body: 'The code is still running when the time limit is reached, such as an endless loop or interval.',
+  },
+];
+
+const bands = [
+  ['90% and up', 'Excellent'],
+  ['70% to 89%', 'Good'],
+  ['50% to 69%', 'Fair'],
+  ['Below 50%', 'Needs Improvement'],
+];
+
+const faqs = [
+  {
+    q: 'Do I need to write any code?',
+    a: 'No. Every question shows a finished snippet and four possible results. You pick the result you expect, then run the code to check.',
+  },
+  {
+    q: 'Can I change my answer after running the code?',
+    a: 'No. Running a question locks your answer, so the score reflects what you predicted, not what you saw. Use Restart to start over with a clean slate.',
+  },
+  {
+    q: 'Is the code really executed?',
+    a: 'Yes. Each snippet runs in a fresh Web Worker in your browser, and your answer is judged against what actually happened. The answer key in the question bank is checked against real execution by the project’s tests.',
+  },
+  {
+    q: 'Can the snippets reach the network?',
+    a: 'No. fetch, XMLHttpRequest, WebSocket and importScripts are disabled inside the sandbox, and the worker has no access to the page.',
+  },
+  {
+    q: 'Does it cost anything or need an account?',
+    a: 'No. JS Quiz is free to use and has no accounts.',
+  },
+  {
+    q: 'Can I add my own questions?',
+    a: 'Yes, if you run your own copy. Questions are plain JavaScript files in the source repository, and the README explains the format. The live site only uses its built-in question bank.',
+  },
+];
+---
+
+<BaseLayout {...seo}>
+  <section class="tool-hero" aria-labelledby="page-title">
+    <div class="tool-hero__bg" aria-hidden="true"></div>
+    <div class="container tool-hero__grid">
+      <div class="tool-hero__copy">
+        <Breadcrumbs crumbs={crumbs} />
+        <p class="eyebrow">Free JavaScript quiz</p>
+        <h1 id="page-title">Predict what the code prints, then run it and find out</h1>
+        <p class="lead">
+          JS Quiz shows you a JavaScript snippet and four possible results. Pick the one you expect,
+          run the code in a <strong>sandbox in your browser</strong>, and see the{' '}
+          <strong>real output</strong> next to your prediction, with an explanation of why.
+        </p>
+        <div class="btn-row">
+          <a href={tool.appUrl} class="btn btn--primary">
+            Open JS Quiz
+          </a>
+          <a href="#how-to" class="btn">
+            How it works
+          </a>
+        </div>
+      </div>
+
+      <dl class="facts">
+        <div>
+          <dt>Questions</dt>
+          <dd>
+            {questions.length} questions, {totalPoints} points
+          </dd>
+        </div>
+        <div>
+          <dt>Topics</dt>
+          <dd>Coercion, scope, async, event loop</dd>
+        </div>
+        <div>
+          <dt>Runs</dt>
+          <dd>In a sandboxed Web Worker</dd>
+        </div>
+        <div>
+          <dt>Cost</dt>
+          <dd>Free, no account</dd>
+        </div>
+      </dl>
+    </div>
+
+    <div class="container tool-hero__shot">
+      <JsQuizShot
+        priority
+        sizes="(min-width: 76rem) 1152px, 100vw"
+        caption="Question 1 answered and run: the prediction matches the real console output, worth 1 point."
+      />
+    </div>
+  </section>
+
+  <nav class="toc" aria-label="On this page">
+    <div class="container">
+      <ul class="toc__list">
+        {toc.map(([id, label]) => (
+          <li>
+            <a href={`#${id}`}>{label}</a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </nav>
+
+  <article class="tool-body">
+    <!-- What it is -->
+    <section id="what" class="section" aria-labelledby="what-title">
+      <div class="container two-col">
+        <div class="block-head">
+          <p class="eyebrow">What it is</p>
+          <h2 id="what-title">An output quiz where the code is the answer key</h2>
+          <p class="lead">
+            Many JavaScript interview questions come down to one thing: knowing what the engine will
+            actually do. JS Quiz asks exactly that, then proves the answer by running the code.
+          </p>
+        </div>
+        <div class="prose">
+          <h3>Who it is for</h3>
+          <ul>
+            <li>Developers preparing for a JavaScript or front-end interview.</li>
+            <li>Interviewers who want a quick, self-checking screen to share with a candidate.</li>
+            <li>
+              Anyone who wants to test their grip on promises, closures and the event loop instead
+              of just reading about them.
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Questions -->
+    <section id="questions" class="section" aria-labelledby="questions-title">
+      <div class="container">
+        <div class="block-head">
+          <p class="eyebrow">The question bank</p>
+          <h2 id="questions-title">{questions.length} questions, from Basic to Advanced</h2>
+          <p class="lead">
+            Harder questions are worth more points. You can answer them in any order from the
+            question list.
+          </p>
+        </div>
+
+        <div class="table-wrap" role="region" aria-label="JS Quiz questions" tabindex="0">
+          <table class="data-table">
+            <caption class="visually-hidden">The questions in JS Quiz</caption>
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Question</th>
+                <th scope="col">Topic</th>
+                <th scope="col">Level</th>
+                <th scope="col">Points</th>
+              </tr>
+            </thead>
+            <tbody>
+              {questions.map((q, i) => (
+                <tr>
+                  <td class="mono">{String(i + 1).padStart(2, '0')}</td>
+                  <th scope="row">{q.title}</th>
+                  <td>{q.topic}</td>
+                  <td>{q.level}</td>
+                  <td>{q.points}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- How to -->
+    <section id="how-to" class="section" aria-labelledby="howto-title">
+      <div class="container two-col two-col--wide">
+        <div>
+          <div class="block-head">
+            <p class="eyebrow">Step by step</p>
+            <h2 id="howto-title">How to play</h2>
+          </div>
+          <ol class="steps">
+            <li>
+              <h3>Open the quiz</h3>
+              <p>
+                Go to <a href={tool.appUrl}>js-quiz.allofcode.com</a>. The first question opens
+                straight away.
+              </p>
+            </li>
+            <li>
+              <h3>Read the snippet</h3>
+              <p>Each question has a short piece of code and asks what it does when it runs.</p>
+            </li>
+            <li>
+              <h3>Make your prediction</h3>
+              <p>
+                Pick one of the four options with the mouse, or press <kbd>A</kbd> to <kbd>D</kbd>.
+              </p>
+            </li>
+            <li>
+              <h3>Run the code</h3>
+              <p>
+                Click <strong>Run Code</strong> or press <kbd>Ctrl</kbd> / <kbd>Cmd</kbd> +{' '}
+                <kbd>Enter</kbd>. Your answer locks, and the real console output appears.
+              </p>
+            </li>
+            <li>
+              <h3>Read the explanation</h3>
+              <p>
+                A verdict tells you whether you were right, and the explanation walks through why
+                the code behaves the way it does.
+              </p>
+            </li>
+            <li>
+              <h3>See your score</h3>
+              <p>
+                After the last question, or whenever you click <strong>Finish</strong>, you get a
+                summary of your score.
+              </p>
+            </li>
+          </ol>
+        </div>
+
+        <aside class="howto-aside" aria-label="Example question">
+          <WindowFrame title="Microtasks vs Macrotasks" meta="Event Loop · 2 pts">
+            <pre
+              class="code-sample"
+              tabindex="0"
+              aria-label="Example question: microtasks versus macrotasks"
+            ><code><span class="fn">console</span>.log(<span class="str">'1'</span>);
+
+<span class="fn">setTimeout</span>(() =&gt; <span class="fn">console</span>.log(<span class="str">'2'</span>), <span class="num">0</span>);
+
+<span class="fn">Promise</span>.resolve().then(() =&gt; <span class="fn">console</span>.log(<span class="str">'3'</span>));
+
+<span class="fn">queueMicrotask</span>(() =&gt; <span class="fn">console</span>.log(<span class="str">'4'</span>));
+
+<span class="fn">console</span>.log(<span class="str">'5'</span>);</code></pre>
+            <p slot="caption" class="sample-caption">
+              Question 7. Does the timer run before the promise callback? Run it in the quiz to find
+              out.
+            </p>
+          </WindowFrame>
+        </aside>
+      </div>
+    </section>
+
+    <!-- Judging -->
+    <section id="judging" class="section" aria-labelledby="judging-title">
+      <div class="container">
+        <div class="block-head">
+          <p class="eyebrow">How answers are judged</p>
+          <h2 id="judging-title">Your prediction is checked against the real result</h2>
+          <p class="lead">
+            Each option describes an expected result. After the code runs, JS Quiz finds the option
+            that matches what really happened. You are correct when that is the option you picked.
+          </p>
+        </div>
+
+        <ul class="levels">
+          {outcomes.map((o) => (
+            <li class="level">
+              <span class="level__tag mono">{o.tag}</span>
+              <h3>{o.title}</h3>
+              <p>{o.body}</p>
+            </li>
+          ))}
+        </ul>
+
+        <div class="two-col">
+          <div class="prose">
+            <h3>The sandbox</h3>
+            <p>
+              Every run gets a <strong>new Web Worker</strong> that is thrown away afterwards. It
+              has no DOM and no access to the page, and network APIs such as <code>fetch</code> and{' '}
+              <code>WebSocket</code> are disabled.
+            </p>
+          </div>
+          <div class="prose">
+            <h3>Async code and timeouts</h3>
+            <p>
+              The run finishes once all timers have fired and pending promises have settled, so{' '}
+              <code>async</code> code completes naturally. A run that takes longer than{' '}
+              <strong>3 seconds</strong> is stopped, and anything printed before that is kept.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Scoring -->
+    <section id="scoring" class="section" aria-labelledby="scoring-title">
+      <div class="container two-col">
+        <div class="block-head">
+          <p class="eyebrow">Scoring</p>
+          <h2 id="scoring-title">Points, progress and your final result</h2>
+          <p class="lead">
+            Basic questions are worth 1 point, Intermediate 2 and Advanced 3, for {totalPoints}{' '}
+            points in total.
+          </p>
+        </div>
+        <div class="prose">
+          <ul>
+            <li>A correct answer earns the question's points. A wrong answer earns none.</li>
+            <li>Questions you never run count as unanswered and earn nothing.</li>
+            <li>
+              The header shows how many questions you have completed and your points so far, and the
+              question list marks each one as correct or incorrect.
+            </li>
+          </ul>
+          <h3>Performance rating</h3>
+          <p>The summary turns your percentage of points into a rating:</p>
+          <ul>
+            {bands.map(([range, label]) => (
+              <li>
+                <strong>{label}</strong>: {range}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Limitations -->
+    <section id="limitations" class="section" aria-labelledby="limits-title">
+      <div class="container two-col">
+        <div class="block-head">
+          <p class="eyebrow">Known limitations</p>
+          <h2 id="limits-title">What JS Quiz doesn't do</h2>
+          <p class="lead">Worth knowing before you use it as an interview screen.</p>
+        </div>
+        <ul class="limits">
+          <li>There is no code editor: you can't edit the snippets or run your own code.</li>
+          <li>
+            The question bank is fixed at {questions.length} questions, always in the same set.
+          </li>
+          <li>Answers can't be changed once the code has run.</li>
+          <li>
+            Code runs in a browser Web Worker, so the DOM and Node.js APIs such as{' '}
+            <code>require</code> aren't available.
+          </li>
+          <li>There are no accounts, saved history or shareable result links.</li>
+          <li>Progress is kept only for the current browser tab.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Privacy -->
+    <section id="privacy" class="section" aria-labelledby="privacy-title">
+      <div class="container two-col">
+        <div class="block-head">
+          <p class="eyebrow">Privacy and data handling</p>
+          <h2 id="privacy-title">Your answers stay in your browser</h2>
+        </div>
+        <div class="prose">
+          <ul>
+            <li>
+              <strong>Local execution.</strong> Snippets run in a Web Worker on your device. Nothing
+              is sent to a server to be executed.
+            </li>
+            <li>
+              <strong>No analytics, no third-party requests.</strong> The app loads only its own
+              files.
+            </li>
+            <li>
+              <strong>Session storage only.</strong> Your progress is saved to this tab's session
+              storage so it survives a refresh. It is cleared when you close the tab, or when you
+              restart the quiz.
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section id="faq" class="section" aria-labelledby="faq-title">
+      <div class="container faq">
+        <div class="block-head">
+          <p class="eyebrow">Questions</p>
+          <h2 id="faq-title">Common questions about JS Quiz</h2>
+        </div>
+        <div class="faq__list">
+          {faqs.map((f) => (
+            <details class="faq__item">
+              <summary>
+                <h3>{f.q}</h3>
+              </summary>
+              <p>{f.a}</p>
+            </details>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="section" aria-labelledby="cta-title">
+      <div class="container">
+        <div class="cta">
+          <div>
+            <h2 id="cta-title">Think you know what the code prints?</h2>
+            <p class="muted">
+              {questions.length} questions, a real sandbox and an explanation for each one. Nothing
+              to install and no account to create.
+            </p>
+          </div>
+          <div class="btn-row">
+            <a href={tool.appUrl} class="btn btn--primary">
+              Open JS Quiz
+            </a>
+            {tool.sourceUrl && (
+              <a href={`${tool.sourceUrl}/issues`} class="btn">
+                Report an issue on GitHub
+              </a>
+            )}
+          </div>
+        </div>
+        <p class="more">
+          <a href="/tools/" class="link-arrow">
+            Browse more developer tools
+          </a>
+        </p>
+      </div>
+    </section>
+  </article>
+</BaseLayout>
+
+<style>
+  /* Hero */
+  .tool-hero {
+    position: relative;
+    padding-top: var(--space-7);
+    isolation: isolate;
+  }
+
+  .tool-hero__bg {
+    position: absolute;
+    inset: 0 0 30%;
+    z-index: -1;
+    background:
+      radial-gradient(44rem 22rem at 85% 0%, rgb(76 201 240 / 0.08), transparent 70%),
+      linear-gradient(var(--color-grid) 1px, transparent 1px) 0 0 / 48px 48px,
+      linear-gradient(90deg, var(--color-grid) 1px, transparent 1px) 0 0 / 48px 48px;
+    mask-image: linear-gradient(to bottom, black 50%, transparent);
+    -webkit-mask-image: linear-gradient(to bottom, black 50%, transparent);
+  }
+
+  .tool-hero__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-6);
+    align-items: end;
+  }
+
+  @media (min-width: 60rem) {
+    .tool-hero__grid {
+      grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+      gap: var(--space-8);
+    }
+  }
+
+  .tool-hero__copy {
+    display: grid;
+    gap: var(--space-4);
+    justify-items: start;
+  }
+
+  .tool-hero h1 {
+    max-width: 20ch;
+    font-size: var(--text-2xl);
+  }
+
+  .tool-hero .lead strong {
+    color: var(--color-text);
+    font-weight: 600;
+  }
+
+  .facts {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1px;
+    overflow: hidden;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    background: var(--color-border);
+  }
+
+  .facts > div {
+    padding: var(--space-4);
+    background: var(--color-surface);
+  }
+
+  .facts dt {
+    margin-bottom: var(--space-1);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-text-subtle);
+  }
+
+  .facts dd {
+    margin: 0;
+    font-size: var(--text-sm);
+    font-weight: 500;
+  }
+
+  .facts code {
+    font-size: 0.85em;
+  }
+
+  .tool-hero__shot {
+    margin-top: var(--space-7);
+  }
+
+  /* On-page nav */
+  .toc {
+    position: sticky;
+    top: var(--header-h);
+    z-index: 10;
+    margin-top: var(--space-7);
+    border-block: 1px solid var(--color-border);
+    background: rgb(9 13 18 / 0.9);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+
+  .toc__list {
+    display: flex;
+    gap: var(--space-1);
+    margin: 0 calc(var(--gutter) * -1);
+    padding: var(--space-2) var(--gutter);
+    overflow-x: auto;
+    list-style: none;
+    scrollbar-width: none;
+  }
+
+  .toc__list::-webkit-scrollbar {
+    display: none;
+  }
+
+  .toc a {
+    display: inline-block;
+    padding: var(--space-2) var(--space-3);
+    border-radius: var(--radius-sm);
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
+    text-decoration: none;
+    white-space: nowrap;
+  }
+
+  .toc a:hover {
+    background: var(--color-surface);
+    color: var(--color-text);
+  }
+
+  html:has(.toc) {
+    scroll-padding-top: calc(var(--header-h) + 4rem);
+  }
+
+  /* Body blocks */
+  .tool-body > .section:first-child {
+    border-top: 0;
+  }
+
+  .block-head {
+    display: grid;
+    gap: var(--space-4);
+    max-width: 46rem;
+    margin-bottom: var(--space-7);
+  }
+
+  .block-head h2,
+  .prose h2 {
+    font-size: var(--text-xl);
+  }
+
+  .two-col {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-6) var(--space-8);
+  }
+
+  @media (min-width: 52rem) {
+    .two-col {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .two-col--wide {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      align-items: start;
+    }
+
+    .two-col--media {
+      grid-template-columns: minmax(0, 380px) minmax(0, 1fr);
+      align-items: start;
+    }
+  }
+
+  .two-col > .block-head {
+    align-self: start;
+    margin-bottom: 0;
+  }
+
+  .two-col .prose h3:first-child,
+  .two-col .prose .eyebrow:first-child {
+    margin-top: 0;
+  }
+
+  .prose .eyebrow + h2 {
+    margin-top: var(--space-4);
+  }
+
+  /* Table */
+  .table-wrap {
+    overflow-x: auto;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+  }
+
+  .data-table {
+    width: 100%;
+    min-width: 36rem;
+    border-collapse: collapse;
+    font-size: var(--text-sm);
+  }
+
+  .data-table th,
+  .data-table td {
+    padding: var(--space-3) var(--space-4);
+    border-bottom: 1px solid var(--color-border);
+    text-align: left;
+    vertical-align: top;
+  }
+
+  .data-table tbody tr:last-child > * {
+    border-bottom: 0;
+  }
+
+  .data-table thead th {
+    background: var(--color-surface-raised);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-text-subtle);
+  }
+
+  .data-table tbody th {
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  .data-table td {
+    color: var(--color-text-muted);
+  }
+
+  /* Steps */
+  .steps {
+    display: grid;
+    gap: var(--space-5);
+    padding: 0;
+    list-style: none;
+    counter-reset: step;
+  }
+
+  .steps li {
+    position: relative;
+    padding-left: 3rem;
+    counter-increment: step;
+  }
+
+  .steps li::before {
+    content: counter(step, decimal-leading-zero);
+    position: absolute;
+    left: 0;
+    top: 0.05rem;
+    display: grid;
+    place-items: center;
+    width: 2rem;
+    height: 2rem;
+    border: 1px solid var(--color-accent-line);
+    border-radius: var(--radius-sm);
+    background: var(--color-accent-soft);
+    color: var(--color-accent);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+  }
+
+  .steps h3 {
+    margin-bottom: var(--space-1);
+    font-size: var(--text-base);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+
+  .steps p {
+    color: var(--color-text-muted);
+  }
+
+  .steps a {
+    color: var(--color-accent);
+  }
+
+  .howto-aside {
+    position: sticky;
+    top: calc(var(--header-h) + 5rem);
+  }
+
+  .code-sample {
+    margin: 0;
+    padding: var(--space-5);
+    overflow-x: auto;
+    font-size: 0.8rem;
+    line-height: 1.8;
+  }
+
+  .code-sample .fn {
+    color: var(--color-cyan);
+  }
+
+  .code-sample .str,
+  .code-sample .num {
+    color: var(--color-amber);
+  }
+
+  .sample-caption {
+    padding: var(--space-3) var(--space-4);
+    border-top: 1px solid var(--color-border);
+    font-size: var(--text-sm);
+    color: var(--color-text-subtle);
+  }
+
+  /* Levels */
+  .levels {
+    display: grid;
+    gap: var(--space-4);
+    margin-bottom: var(--space-7);
+    padding: 0;
+    list-style: none;
+  }
+
+  @media (min-width: 52rem) {
+    .levels {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 68rem) {
+    .levels {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+
+  .level {
+    display: grid;
+    align-content: start;
+    gap: var(--space-2);
+    padding: var(--space-5);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    background: var(--color-surface);
+  }
+
+  .level__tag {
+    width: fit-content;
+    padding: 0.1rem 0.5rem;
+    border: 1px solid var(--color-accent-line);
+    border-radius: var(--radius-sm);
+    color: var(--color-accent);
+    font-size: var(--text-xs);
+  }
+
+  .level h3 {
+    font-size: var(--text-md);
+    font-weight: 600;
+  }
+
+  .level p {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+  }
+
+  /* Limitations */
+  .limits {
+    display: grid;
+    gap: 0;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    background: var(--color-surface);
+  }
+
+  .limits li {
+    position: relative;
+    padding: var(--space-3) var(--space-4) var(--space-3) 2.75rem;
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
+  }
+
+  .limits li + li {
+    border-top: 1px solid var(--color-border);
+  }
+
+  .limits li::before {
+    content: '×';
+    position: absolute;
+    left: var(--space-4);
+    top: var(--space-3);
+    color: var(--color-amber);
+    font-family: var(--font-mono);
+  }
+
+  /* FAQ */
+  .faq {
+    display: grid;
+    gap: 0;
+  }
+
+  .faq .block-head {
+    margin-bottom: var(--space-6);
+  }
+
+  .faq__list {
+    border-top: 1px solid var(--color-border);
+  }
+
+  .faq__item {
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .faq__item summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+    padding: var(--space-4) 0;
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .faq__item summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .faq__item summary::after {
+    content: '+';
+    flex: none;
+    font-family: var(--font-mono);
+    font-size: var(--text-lg);
+    color: var(--color-accent);
+    transition: transform var(--dur) var(--ease);
+  }
+
+  .faq__item[open] summary::after {
+    transform: rotate(45deg);
+  }
+
+  .faq__item summary h3 {
+    font-size: var(--text-base);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+
+  .faq__item p {
+    max-width: 46rem;
+    padding-bottom: var(--space-5);
+    color: var(--color-text-muted);
+  }
+
+  /* CTA */
+  .cta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-5);
+    padding: var(--space-6);
+    border: 1px solid var(--color-accent-line);
+    border-radius: var(--radius-lg);
+    background:
+      radial-gradient(30rem 12rem at 0% 0%, var(--color-accent-soft), transparent 70%),
+      var(--color-surface);
+  }
+
+  .cta h2 {
+    margin-bottom: var(--space-2);
+    font-size: var(--text-xl);
+  }
+
+  .more {
+    margin-top: var(--space-6);
+  }
+</style>

@@ -25,6 +25,7 @@ const PAGES = [
   '/',
   '/tools/',
   '/tools/sql-compare/',
+  '/tools/js-quiz/',
   '/about/',
   '/contact/',
   '/privacy/',

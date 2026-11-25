@@ -8,8 +8,9 @@ import { breadcrumbSchema, graph, type Crumb } from '../lib/seo';
  * Keep this page in sync with reality. If analytics, cookies, forms or any
  * third-party script are added to the site, this page must be updated first.
  */
-const lastUpdated = '2026-11-05';
+const lastUpdated = '2026-11-26';
 const sqlCompare = getTool('sql-compare');
+const jsQuiz = getTool('js-quiz');
 
 const path = '/privacy/';
 const crumbs: Crumb[] = [
@@ -87,6 +88,23 @@ const seo = {
         </li>
         <li>Preferences such as dialect and theme are also stored locally in your browser.</li>
         <li>A service worker caches the app's files on your device so it works offline.</li>
+      </ul>
+
+      <h2>JS Quiz</h2>
+      <p>
+        <a href={jsQuiz.pagePath}>JS Quiz</a> runs at
+        <a href={jsQuiz.appUrl}>js-quiz.allofcode.com</a>.
+      </p>
+      <ul>
+        <li>
+          Code snippets run <strong>entirely in your browser</strong>, in a Web Worker. Nothing is
+          sent to a server.
+        </li>
+        <li>The app loads no analytics and makes no third-party requests.</li>
+        <li>
+          Your answers and progress are saved in your browser's session storage so they survive a
+          page refresh. This data stays on your device and is cleared when you close the tab.
+        </li>
       </ul>
 
       <h2>External links</h2>
