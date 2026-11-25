@@ -102,8 +102,15 @@ const seo = {
         </li>
         <li>The app loads no analytics and makes no third-party requests.</li>
         <li>
-          Your answers and progress are saved in your browser's session storage so they survive a
-          page refresh. This data stays on your device and is cleared when you close the tab.
+          Your quiz session (question order, timers, answers and the number of times you left the
+          quiz tab) is saved in your browser's local storage, so a reload or a closed tab doesn't
+          reset it. This data stays on your device and is never sent anywhere. Starting a new quiz
+          replaces it, a finished session is discarded after a day, and you can remove it at any
+          time by clearing site data in your browser.
+        </li>
+        <li>
+          Whether the quiz tab is visible is checked only to count tab switches for the result page.
+          It is not recorded anywhere else.
         </li>
       </ul>
 

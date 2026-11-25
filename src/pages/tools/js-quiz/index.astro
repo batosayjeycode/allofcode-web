@@ -28,15 +28,16 @@ const crumbs: Crumb[] = [
 ];
 
 const description =
-  'A free JavaScript output quiz: predict what each snippet prints, run it in a browser sandbox and learn why. Covers closures, promises and the event loop.';
+  'A free, timed JavaScript output assessment: predict what each snippet prints, run it in a browser sandbox, then review a scored result.';
 
 const featureList = [
-  '10 JavaScript output questions across 7 topics, from Basic to Advanced',
+  '10 JavaScript output questions across 7 topics, rated Easy, Medium or Hard',
+  'Question and answer order shuffled for every session',
+  'Timed: a 5-minute read-only preparation, then a 5, 10 or 15-minute quiz',
   'Runs each snippet in an isolated Web Worker and compares your prediction with the real result',
   'Handles console output, thrown errors, async code and timeouts',
-  'Explanation revealed after every question',
-  'Points per question and a scored summary with a performance rating',
-  'Keyboard shortcuts: letter keys to choose, Ctrl/Cmd + Enter to run',
+  'Result with score, accuracy, time spent and a per-question answer review',
+  'Rule-based interviewer summary: strengths, gaps, difficulty breakdown and follow-up topics',
   'Runs entirely in the browser, no account needed',
 ];
 
@@ -59,9 +60,10 @@ const seo = {
 const toc = [
   ['what', 'What it is'],
   ['questions', 'Questions'],
-  ['how-to', 'How to play'],
+  ['how-to', 'How it works'],
   ['judging', 'How answers are judged'],
-  ['scoring', 'Scoring'],
+  ['scoring', 'Scoring & results'],
+  ['fair-play', 'Fair play'],
   ['limitations', 'Limitations'],
   ['privacy', 'Privacy'],
   ['faq', 'Questions & answers'],
@@ -73,70 +75,70 @@ const questions = [
     id: 'JS-001',
     title: 'Implicit Type Coercion',
     topic: 'JavaScript Fundamentals',
-    level: 'Basic',
+    level: 'Easy',
     points: 1,
   },
   {
     id: 'JS-002',
     title: 'Shallow Copy with Object Spread',
     topic: 'Array & Object',
-    level: 'Intermediate',
+    level: 'Medium',
     points: 2,
   },
   {
     id: 'JS-003',
     title: 'Temporal Dead Zone & Shadowing',
     topic: 'Scope & Hoisting',
-    level: 'Intermediate',
+    level: 'Medium',
     points: 2,
   },
   {
     id: 'JS-004',
     title: 'Closures in Loops: var vs let',
     topic: 'Scope & Hoisting',
-    level: 'Intermediate',
+    level: 'Medium',
     points: 2,
   },
   {
     id: 'JS-005',
     title: 'Promise Executor Timing',
     topic: 'Async JavaScript',
-    level: 'Intermediate',
+    level: 'Medium',
     points: 2,
   },
   {
     id: 'JS-006',
     title: 'Missing await in try/catch',
     topic: 'Async JavaScript',
-    level: 'Advanced',
+    level: 'Hard',
     points: 3,
   },
   {
     id: 'JS-007',
     title: 'Microtasks vs Macrotasks',
     topic: 'Event Loop',
-    level: 'Intermediate',
+    level: 'Medium',
     points: 2,
   },
   {
     id: 'JS-008',
     title: 'async/await Resumption Order',
     topic: 'Event Loop',
-    level: 'Advanced',
+    level: 'Hard',
     points: 3,
   },
   {
     id: 'JS-009',
     title: 'Losing this in Strict Mode',
     topic: 'Functions',
-    level: 'Advanced',
+    level: 'Hard',
     points: 3,
   },
   {
     id: 'JS-010',
     title: 'return Inside finally',
     topic: 'Error Handling',
-    level: 'Advanced',
+    level: 'Hard',
     points: 3,
   },
 ];
@@ -172,6 +174,25 @@ const bands = [
   ['Below 50%', 'Needs Improvement'],
 ];
 
+const fairPlay = [
+  [
+    'Reloading resumes',
+    'The session, its deadlines and answers are saved in your browser, so a reload, a closed tab or a second tab picks up where you were with the clock still running.',
+  ],
+  [
+    'The clock keeps running',
+    'Time is measured against fixed deadlines. Switching tabs, sleeping the computer or moving the system clock back doesn’t add time.',
+  ],
+  [
+    'Answers lock',
+    'Running a question locks the answer. Once the quiz ends nothing can be changed, and the result page can’t be skipped.',
+  ],
+  [
+    'Tab switches are recorded',
+    'Each time the quiz tab is hidden during the quiz is counted, with the time away, and shown on the result.',
+  ],
+];
+
 const faqs = [
   {
     q: 'Do I need to write any code?',
@@ -179,7 +200,15 @@ const faqs = [
   },
   {
     q: 'Can I change my answer after running the code?',
-    a: 'No. Running a question locks your answer, so the score reflects what you predicted, not what you saw. Use Restart to start over with a clean slate.',
+    a: 'No. Running a question locks your answer, so the score reflects what you predicted, not what you saw.',
+  },
+  {
+    q: 'Can I pause the timer or start again?',
+    a: 'No. The timer keeps running if you switch tabs or reload, and an active quiz can’t be restarted. Once the result is shown you can start a new quiz, which begins with a fresh 5-minute preparation and a new question order.',
+  },
+  {
+    q: 'Do all candidates see the same questions?',
+    a: 'Yes, the same 10 questions, but in a different order, and with the four options shuffled. The review on the result page shows the answer text next to each letter, so results can be compared.',
   },
   {
     q: 'Is the code really executed?',
@@ -209,9 +238,10 @@ const faqs = [
         <p class="eyebrow">Free JavaScript quiz</p>
         <h1 id="page-title">Predict what the code prints, then run it and find out</h1>
         <p class="lead">
-          JS Quiz shows you a JavaScript snippet and four possible results. Pick the one you expect,
+          JS Quiz is a timed JavaScript assessment. For each snippet, pick the result you expect,
           run the code in a <strong>sandbox in your browser</strong>, and see the{' '}
-          <strong>real output</strong> next to your prediction, with an explanation of why.
+          <strong>real output</strong> next to your prediction. At the end you get a scored result
+          and an <strong>interviewer summary</strong>.
         </p>
         <div class="btn-row">
           <a href={tool.appUrl} class="btn btn--primary">
@@ -231,8 +261,8 @@ const faqs = [
           </dd>
         </div>
         <div>
-          <dt>Topics</dt>
-          <dd>Coercion, scope, async, event loop</dd>
+          <dt>Time</dt>
+          <dd>5 min preparation, then 5, 10 or 15 min</dd>
         </div>
         <div>
           <dt>Runs</dt>
@@ -249,7 +279,7 @@ const faqs = [
       <JsQuizShot
         priority
         sizes="(min-width: 76rem) 1152px, 100vw"
-        caption="Question 1 answered and run: the prediction matches the real console output, worth 1 point."
+        caption="A 10-minute quiz in progress: the prediction matches the real console output, worth 1 point."
       />
     </div>
   </section>
@@ -282,7 +312,10 @@ const faqs = [
           <h3>Who it is for</h3>
           <ul>
             <li>Developers preparing for a JavaScript or front-end interview.</li>
-            <li>Interviewers who want a quick, self-checking screen to share with a candidate.</li>
+            <li>
+              Interviewers who want a quick, self-checking screen, with a summary that suggests what
+              to ask next.
+            </li>
             <li>
               Anyone who wants to test their grip on promises, closures and the event loop instead
               of just reading about them.
@@ -297,10 +330,10 @@ const faqs = [
       <div class="container">
         <div class="block-head">
           <p class="eyebrow">The question bank</p>
-          <h2 id="questions-title">{questions.length} questions, from Basic to Advanced</h2>
+          <h2 id="questions-title">{questions.length} questions, from Easy to Hard</h2>
           <p class="lead">
-            Harder questions are worth more points. You can answer them in any order from the
-            question list.
+            Harder questions are worth more points. Each session shows them in a random order with
+            the options shuffled, and you can answer them in any order from the question list.
           </p>
         </div>
 
@@ -338,24 +371,29 @@ const faqs = [
         <div>
           <div class="block-head">
             <p class="eyebrow">Step by step</p>
-            <h2 id="howto-title">How to play</h2>
+            <h2 id="howto-title">How it works</h2>
           </div>
           <ol class="steps">
             <li>
-              <h3>Open the quiz</h3>
+              <h3>Review the questions</h3>
               <p>
-                Go to <a href={tool.appUrl}>js-quiz.allofcode.com</a>. The first question opens
-                straight away.
+                Open <a href={tool.appUrl}>js-quiz.allofcode.com</a>. For the first{' '}
+                <strong>5 minutes</strong> every question is shown read-only, so you can read the
+                snippets before the clock starts. This step can't be skipped.
               </p>
             </li>
             <li>
-              <h3>Read the snippet</h3>
-              <p>Each question has a short piece of code and asks what it does when it runs.</p>
+              <h3>Choose your time</h3>
+              <p>
+                Pick <strong>5, 10 or 15 minutes</strong>. The quiz starts straight away, and the
+                choice can't be changed.
+              </p>
             </li>
             <li>
               <h3>Make your prediction</h3>
               <p>
                 Pick one of the four options with the mouse, or press <kbd>A</kbd> to <kbd>D</kbd>.
+                A verdict and an explanation appear once the code has run.
               </p>
             </li>
             <li>
@@ -366,17 +404,10 @@ const faqs = [
               </p>
             </li>
             <li>
-              <h3>Read the explanation</h3>
+              <h3>See your result</h3>
               <p>
-                A verdict tells you whether you were right, and the explanation walks through why
-                the code behaves the way it does.
-              </p>
-            </li>
-            <li>
-              <h3>See your score</h3>
-              <p>
-                After the last question, or whenever you click <strong>Finish</strong>, you get a
-                summary of your score.
+                The quiz ends when every question has been run or the time runs out, and the result
+                opens on its own. Questions you didn't run count as unanswered.
               </p>
             </li>
           </ol>
@@ -454,21 +485,33 @@ const faqs = [
       <div class="container two-col">
         <div class="block-head">
           <p class="eyebrow">Scoring</p>
-          <h2 id="scoring-title">Points, progress and your final result</h2>
+          <h2 id="scoring-title">Points, accuracy and the interviewer summary</h2>
           <p class="lead">
-            Basic questions are worth 1 point, Intermediate 2 and Advanced 3, for {totalPoints}{' '}
-            points in total.
+            Easy questions are worth 1 point, Medium 2 and Hard 3, for {totalPoints} points in
+            total.
           </p>
         </div>
         <div class="prose">
           <ul>
             <li>A correct answer earns the question's points. A wrong answer earns none.</li>
-            <li>Questions you never run count as unanswered and earn nothing.</li>
             <li>
-              The header shows how many questions you have completed and your points so far, and the
-              question list marks each one as correct or incorrect.
+              Questions you never run count as unanswered and earn nothing. They lower the score,
+              but not the <strong>accuracy</strong>, which is correct answers out of answered ones.
             </li>
           </ul>
+          <h3>The result page</h3>
+          <p>
+            Score out of {totalPoints}, accuracy, correct, incorrect and unanswered counts, whether
+            the quiz was completed or the time expired, time spent and tab switches. Below that, a
+            review of every question shows the code, the answer given, the correct answer, the
+            explanation, the difficulty and the points earned.
+          </p>
+          <h3>Interviewer summary</h3>
+          <p>
+            Built from the answers with fixed rules, not AI: overall performance, strengths and
+            areas for improvement by topic, a breakdown by difficulty, and suggested follow-up
+            topics for the interview. The same answers always produce the same summary.
+          </p>
           <h3>Performance rating</h3>
           <p>The summary turns your percentage of points into a rating:</p>
           <ul>
@@ -479,6 +522,28 @@ const faqs = [
             ))}
           </ul>
         </div>
+      </div>
+    </section>
+
+    <!-- Fair play -->
+    <section id="fair-play" class="section" aria-labelledby="fair-title">
+      <div class="container">
+        <div class="block-head">
+          <p class="eyebrow">Fair play</p>
+          <h2 id="fair-title">Built so the result reflects the candidate</h2>
+          <p class="lead">
+            JS Quiz is meant to be used as a timed screen, so it guards against the common ways of
+            getting extra time or a second attempt.
+          </p>
+        </div>
+        <ul class="levels">
+          {fairPlay.map(([title, body]) => (
+            <li class="level">
+              <h3>{title}</h3>
+              <p>{body}</p>
+            </li>
+          ))}
+        </ul>
       </div>
     </section>
 
@@ -493,7 +558,8 @@ const faqs = [
         <ul class="limits">
           <li>There is no code editor: you can't edit the snippets or run your own code.</li>
           <li>
-            The question bank is fixed at {questions.length} questions, always in the same set.
+            The question bank is fixed at {questions.length} questions. The order changes per
+            session, but the set doesn't.
           </li>
           <li>Answers can't be changed once the code has run.</li>
           <li>
@@ -501,7 +567,10 @@ const faqs = [
             <code>require</code> aren't available.
           </li>
           <li>There are no accounts, saved history or shareable result links.</li>
-          <li>Progress is kept only for the current browser tab.</li>
+          <li>
+            Everything runs in the browser. Someone who clears site data or edits it with developer
+            tools before starting can get a fresh session; stopping that would need a server.
+          </li>
         </ul>
       </div>
     </section>
@@ -524,9 +593,10 @@ const faqs = [
               files.
             </li>
             <li>
-              <strong>Session storage only.</strong> Your progress is saved to this tab's session
-              storage so it survives a refresh. It is cleared when you close the tab, or when you
-              restart the quiz.
+              <strong>Saved in this browser only.</strong> The quiz session (question order, timers,
+              answers and tab-switch count) is kept in this browser's local storage, so a reload or
+              a closed tab doesn't reset it. Starting a new quiz replaces it, and a finished session
+              is discarded after a day. Nothing is sent anywhere.
             </li>
           </ul>
         </div>
