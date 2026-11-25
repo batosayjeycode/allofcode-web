@@ -1,6 +1,6 @@
 ---
 /**
- * Real screenshot of JS Quiz (desktop, question 1 answered and run),
+ * Real screenshot of JS Quiz (desktop, 10-minute quiz, question 1 answered and run),
  * captured from https://js-quiz.allofcode.com/. Served as responsive AVIF/WebP.
  */
 import { Picture } from 'astro:assets';
@@ -20,13 +20,13 @@ const {
 } = Astro.props;
 ---
 
-<WindowFrame title="js-quiz.allofcode.com" meta="Question 1 of 10">
+<WindowFrame title="js-quiz.allofcode.com" meta="10-minute quiz">
   <Picture
     src={shot}
     formats={['avif', 'webp']}
     widths={[480, 720, 960, 1440]}
     sizes={sizes}
-    alt="JS Quiz after answering question 1, Implicit Type Coercion. Option A, 53 2 10 2, is marked as your answer and correct. The console output panel shows 53 2 10 2, executed successfully in 33 ms, and a Correct banner awards 1 point. A sidebar lists all 10 questions with their topics."
+    alt="JS Quiz during a 10-minute quiz, with 8 minutes 37 seconds left. Question 1 of 10, Implicit Type Coercion, rated Easy and worth 1 point, has been answered: option B, 53 2 10 2, is marked as your answer and correct. The console output shows 53 2 10 2, and a Correct banner awards 1 point. A sidebar lists all 10 questions in this session's shuffled order."
     loading={priority ? 'eager' : 'lazy'}
     fetchpriority={priority ? 'high' : 'auto'}
     decoding="async"

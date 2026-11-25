@@ -55,10 +55,10 @@ export const tools: Tool[] = [
     pagePath: '/tools/js-quiz/',
     sourceUrl: 'https://github.com/batosayjeycode/allofcode-js-quiz',
     highlights: [
-      '10 questions on coercion, scope, closures, promises and the event loop',
+      '10 questions on coercion, scope, closures, promises and the event loop, shuffled per session',
       'Your answer is checked against the real output of the code, not a stored string',
-      'Code runs in a throwaway Web Worker with network access disabled and a 3 s timeout',
-      'Scored summary at the end, with an explanation after every question',
+      'Timed: 5 minutes to read the questions, then 5, 10 or 15 minutes to answer',
+      'Result with accuracy, a per-question review and a rule-based interviewer summary',
     ],
     tags: ['JavaScript', 'Event loop', 'Interview prep', 'Browser-only'],
   },
